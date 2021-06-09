@@ -29,5 +29,6 @@ class OrthoBot {
 };
 
 var orthoBot = new OrthoBot ({
-    viewport: document.querySelector(".ob-viewport")
+    viewport: document.querySelector(".ob-viewport"),
+    gridsize: 128
 });
