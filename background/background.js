@@ -15,6 +15,8 @@ export class Background {
         console.log("created background of", model.colcount, "x", model.rowcount, "tiles");
     }
 
+    // TODO: position inside the viewport to centre the player
+
     countTiles = function(hash) {
         return 1 + hash.reduce((count, char, index) => {
             if (index === 1) return 0;

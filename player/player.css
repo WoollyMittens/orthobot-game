@@ -1,0 +1,15 @@
+.ob-player {
+    position: absolute;
+    z-index: 2;
+}
+
+.ob-player[data-variant="default"] {
+    background-color: Blue;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+}
+
+.ob-player[data-direction="S"] {}
+
+.ob-player[data-status="idle"] {}

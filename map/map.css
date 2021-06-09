@@ -1,20 +1,16 @@
 .ob-tile {
   position: absolute;
-  width: 8rem;
-  height: 8rem;
-  left: 0;
-  top: 0;
   z-index: 1;
 }
 
-[data-type="0"] {
+[data-variant="0"] {
   background-color: Yellow;
 }
 
-[data-type="A"] {
+[data-variant="A"] {
   background-color: Red;
 }
 
-[data-type="B"] {
+[data-variant="B"] {
   background-color: Green;
 }

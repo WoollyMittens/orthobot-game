@@ -13,11 +13,13 @@ export class Map {
                 let col = count % model.rowcount;
                 let row = Math.floor(count / model.rowcount);
                 tile.setAttribute("class", "ob-tile");
-                tile.setAttribute("data-type", char);
+                tile.setAttribute("data-variant", char);
                 // position it on the grid
                 Object.assign(tile.style, {
                     left: (col * model.gridsize) + "px",
-                    top: (row * model.gridsize) + "px"
+                    top: (row * model.gridsize) + "px",
+                    width: model.gridsize + "px",
+                    height: model.gridsize + "px"
                 });
                 // add the tile to the background layer
                 model.background.appendChild(tile);
