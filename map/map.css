@@ -1,0 +1,9 @@
+.ob-tile {
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  border: solid 1px #ffffff66;
+}
