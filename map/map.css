@@ -1,5 +1,6 @@
 .ob-tile {
   position: absolute;
+  opacity: 0.7;
   z-index: 1;
 }
 
@@ -13,4 +14,8 @@
 
 [data-variant="B"] {
   background-color: Green;
+}
+
+[data-variant="X"] {
+  background-color: Cyan;
 }

@@ -3,7 +3,7 @@
     z-index: 2;
 }
 
-.ob-player[data-variant="default"] {
+.ob-player[data-variant=""] {
     background-color: Blue;
     width: 64px;
     height: 64px;
