@@ -10,14 +10,18 @@ import { Controls } from "./controls/controls.js";
 
 class OrthoBot {
     constructor(model) {
+        // store the model
         this.model = model;
-        this.model.time = new Date().getTime();
+        // init the components
         this.init();
+        // start the redraw loop
         this.update();
+        // reset when the url hash changes
         window.addEventListener("hashchange", this.reset.bind(this), false);
     }
 
     init() {
+        // create the components
         this.storage = new Storage(this.model);
         this.background = new Background(this.model);
         this.map = new Map(this.model);
@@ -25,11 +29,16 @@ class OrthoBot {
         this.player = new Player(this.model);
         this.shots = new Shots(this.model);
         this.controls = new Controls(this.model);
+        // start the timer
+        this.model.time = new Date().getTime();
     }
 
     reset() {
+        // empty the root element
         this.model.viewport.innerHTML = "";
+        // remove the controls
         this.controls.end();
+        // restart from the beginning
         this.init();
     }
 
@@ -50,8 +59,11 @@ class OrthoBot {
 };
 
 var orthoBot = new OrthoBot ({
+    // target element
     viewport: document.querySelector(".ob-viewport"),
+    // size of the background tiles
     gridsize: 128,
+    // distort this much for isometric view
     foreshorten: 0.75
 });
 
