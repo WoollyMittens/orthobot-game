@@ -4,18 +4,14 @@
   z-index: 1;
 }
 
-[data-variant="0"] {
-  background-color: Yellow;
-}
-
 [data-variant="A"] {
-  background-color: Red;
+  background-color: crimson;
 }
 
 [data-variant="B"] {
-  background-color: Green;
+  background-color: teal;
 }
 
 [data-variant="X"] {
-  background-color: Cyan;
+  background-color: orange;
 }

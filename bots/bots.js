@@ -35,6 +35,12 @@ export class Bots {
                     bot.setAttribute("data-defence", "2");
                     bot.setAttribute("data-offence", "2");
                     break;
+                case "b":
+                    bot.setAttribute("data-health", "300");
+                    bot.setAttribute("data-status", "idle");
+                    bot.setAttribute("data-defence", "3");
+                    bot.setAttribute("data-offence", "3");
+                    break;
             }
             // add the bot to the map
             Object.assign(bot.style, {

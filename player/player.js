@@ -20,7 +20,17 @@ export class Player {
         player.setAttribute("data-status", "idle");
         player.setAttribute("data-row", "1");
         player.setAttribute("data-col", "1");
-        // for numeric rock/paper/scissors (a-b+5)%3 == 0 (lose) | 1 (win) | 2 (stalemate)
+        // for numeric rock/paper/scissors f(1,2,3) = (a-b+5)%3 = 0,1,2 = lose, win, draw
+        // 1 = red, 2 = green, 3 = blue
+        // 1 vs 1 : (1-1+5)%3 = 2 (draw)
+        // 1 vs 2 : (1-2+5)%3 = 1 (win)
+        // 1 vs 3 : (1-3+5)%3 = 0 (lose)
+        // 2 vs 1 : (2-1+5)%3 = 0 (lose)
+        // 2 vs 2 : (2-2+5)%3 = 2 (draw)
+        // 2 vs 3 : (2-3+5)%3 = 1 (win)
+        // 3 vs 1 : (3-1+5)%3 = 1 (win)
+        // 3 vs 2 : (3-2+5)%3 = 0 (lose)
+        // 3 vs 3 : (3-3+5)%3 = 2 (draw)
         player.setAttribute("data-defence", "1");
         player.setAttribute("data-offence", "1");
         Object.assign(player.style, {
