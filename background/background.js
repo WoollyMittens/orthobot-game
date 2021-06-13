@@ -12,7 +12,7 @@ export class Background {
         console.log("created background of", model.colcount, "x", model.rowcount, "tiles");
     }
 
-    update = function() {
+    update = function(interval) {
         // if the player is too close to the edge
             // move the map to compensate
     }

@@ -6,6 +6,8 @@ export class Controls {
         // add joypad controls
         console.log('adding controls to:', model.viewport);
     }
- 
-    update = function() {}
+
+    end = function() {
+        // remove any event handlers set on the viewport
+    }
 }

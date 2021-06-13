@@ -29,7 +29,6 @@ export class Map {
     }
 
     resolve = function (tile) {
-        console.log("resolving attributes for tile:", tile);
         // global handlers
             // reduce the illumination level by one
         // specific handlers
@@ -43,7 +42,7 @@ export class Map {
         }
     }
 
-    update = function () {
+    update = function (interval) {
         // for every tile
         this.model.map.forEach(tile => this.resolve(tile));
     }

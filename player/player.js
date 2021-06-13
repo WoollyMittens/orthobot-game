@@ -32,7 +32,7 @@ export class Player {
         return player;
     }
  
-    update = function() {
+    update = function(interval) {
         // handle the flags
         // handle tile exit
             // remove flag of exited tile

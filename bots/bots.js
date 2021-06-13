@@ -17,8 +17,8 @@ export class Bots {
             // global properties
             bot.setAttribute("class", "ob-bot");
             bot.setAttribute("data-variant", char);
-            bot.setAttribute("data-row", "1");
-            bot.setAttribute("data-col", "1");
+            bot.setAttribute("data-row", col);
+            bot.setAttribute("data-col", row);
             bot.setAttribute("data-direction", "S");
             bot.setAttribute("data-speed", "0");
             // specific properties
@@ -49,7 +49,6 @@ export class Bots {
     }
  
     resolve = function (bot) {
-        console.log("resolving attributes for bot:", bot);
         switch (bot.getAttribute("data-variant")) {
             case "a":
                 // handle the relevant attributes for this bot
@@ -60,7 +59,7 @@ export class Bots {
         }
     }
 
-    update = function() {
+    update = function(interval) {
         // for every bot
         this.model.bots.forEach(bot => this.resolve(bot));
     }

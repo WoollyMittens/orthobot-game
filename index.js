@@ -11,28 +11,41 @@ import { Controls } from "./controls/controls.js";
 class OrthoBot {
     constructor(model) {
         this.model = model;
-        this.storage = new Storage(model);
-        this.background = new Background(model);
-        this.map = new Map(model);
-        this.bots = new Bots(model);
-        this.player = new Player(model);
-        this.shots = new Shots(model);
-        this.controls = new Controls(model);
+        this.model.time = new Date().getTime();
         this.init();
+        this.update();
+        window.addEventListener("hashchange", this.reset.bind(this), false);
     }
 
     init() {
-        console.log("stored config:", this.model);
+        this.storage = new Storage(this.model);
+        this.background = new Background(this.model);
+        this.map = new Map(this.model);
+        this.bots = new Bots(this.model);
+        this.player = new Player(this.model);
+        this.shots = new Shots(this.model);
+        this.controls = new Controls(this.model);
+    }
+
+    reset() {
+        this.model.viewport.innerHTML = "";
+        this.controls.end();
+        this.init();
     }
 
     update() {
-        // TODO: an animation frame driven redraw cycle goes around here
-        this.storage.update();
-        this.background.update();
-        this.map.update();
-        this.bots.update();
-        this.player.update();
-        this.shots.update();
+        // update the timer
+        var time = new Date().getTime();
+        var interval = time - this.model.time;
+        this.model.time = time;
+        // update the components
+        this.background.update(interval);
+        this.map.update(interval);
+        this.bots.update(interval);
+        this.player.update(interval);
+        this.shots.update(interval);
+        // request the next redraw
+        //window.requestAnimationFrame(this.update.bind(this));
     }
 };
 

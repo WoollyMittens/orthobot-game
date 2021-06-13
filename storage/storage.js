@@ -18,11 +18,4 @@ export class Storage {
     get rowcount() {
         return this.hash.match(/[A-Z]/g).length / this.colcount;
     }
-
-    onHashChanged = function (evt, model) {
-        // update the tile codes from the url hash
-        model.hash = this.hash;
-    }
- 
-    update = function() {}
 }

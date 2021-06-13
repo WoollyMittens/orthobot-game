@@ -5,5 +5,9 @@ export class Shots {
         console.log('no projectiles');
     }
  
-    update = function() {}
+    update = function(interval) {
+        // create new shots
+        // move existing shots
+            // resolve hits
+    }
 }
