@@ -15,22 +15,17 @@ export class Player {
         player.setAttribute("class", "ob-player");
         player.setAttribute("data-variant", "");
         player.setAttribute("data-direction", "S");
-        player.setAttribute("data-speed", "0");
-        player.setAttribute("data-health", "100");
+        player.setAttribute("data-acceleration", "");
+        player.setAttribute("data-horizontal", "0");
+        player.setAttribute("data-vertical", "0");
+        player.setAttribute("data-topspeed", "128");
+        player.setAttribute("data-health", "9");
+        player.setAttribute("data-regen", "1");
+        player.setAttribute("data-reel", "stowed");
         player.setAttribute("data-status", "idle");
         player.setAttribute("data-row", "1");
         player.setAttribute("data-col", "1");
-        // for numeric rock/paper/scissors f(1,2,3) = (a-b+5)%3 = 0,1,2 = lose, win, draw
-        // 1 = red, 2 = green, 3 = blue
-        // 1 vs 1 : (1-1+5)%3 = 2 (draw)
-        // 1 vs 2 : (1-2+5)%3 = 1 (win)
-        // 1 vs 3 : (1-3+5)%3 = 0 (lose)
-        // 2 vs 1 : (2-1+5)%3 = 0 (lose)
-        // 2 vs 2 : (2-2+5)%3 = 2 (draw)
-        // 2 vs 3 : (2-3+5)%3 = 1 (win)
-        // 3 vs 1 : (3-1+5)%3 = 1 (win)
-        // 3 vs 2 : (3-2+5)%3 = 0 (lose)
-        // 3 vs 3 : (3-3+5)%3 = 2 (draw)
+        // for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
         player.setAttribute("data-defence", "1");
         player.setAttribute("data-offence", "1");
         Object.assign(player.style, {

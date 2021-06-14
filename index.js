@@ -45,7 +45,7 @@ class OrthoBot {
     update() {
         // update the timer
         var time = new Date().getTime();
-        var interval = time - this.model.time;
+        var interval = (time - this.model.time) / 1000;
         this.model.time = time;
         // update the components
         this.background.update(interval);

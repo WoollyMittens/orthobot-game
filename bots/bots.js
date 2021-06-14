@@ -20,26 +20,36 @@ export class Bots {
             bot.setAttribute("data-row", col);
             bot.setAttribute("data-col", row);
             bot.setAttribute("data-direction", "S");
-            bot.setAttribute("data-speed", "0");
+            bot.setAttribute("data-acceleration", "0");
+            bot.setAttribute("data-horizontal", "0");
+            bot.setAttribute("data-vertical", "0");
+            bot.setAttribute("data-health", "9");
+            bot.setAttribute("data-status", "idle");
             // specific properties
             switch (char) {
                 case "a":
-                    bot.setAttribute("data-health", "100");
-                    bot.setAttribute("data-status", "idle");
+                    bot.setAttribute("data-regen", "1");
                     bot.setAttribute("data-defence", "1");
                     bot.setAttribute("data-offence", "1");
+                    bot.setAttribute("data-topspeed", "128");
+                    bot.setAttribute("data-patrol", "hunt");
+                    bot.setAttribute("data-range", "4");
                     break;
                 case "b":
-                    bot.setAttribute("data-health", "200");
-                    bot.setAttribute("data-status", "idle");
+                    bot.setAttribute("data-regen", "2");
                     bot.setAttribute("data-defence", "2");
                     bot.setAttribute("data-offence", "2");
+                    bot.setAttribute("data-topspeed", "96");
+                    bot.setAttribute("data-patrol", "clockwise");
+                    bot.setAttribute("data-range", "6");
                     break;
                 case "b":
-                    bot.setAttribute("data-health", "300");
-                    bot.setAttribute("data-status", "idle");
+                    bot.setAttribute("data-regen", "3");
                     bot.setAttribute("data-defence", "3");
                     bot.setAttribute("data-offence", "3");
+                    bot.setAttribute("data-topspeed", "64");
+                    bot.setAttribute("data-patrol", "reverse");
+                    bot.setAttribute("data-range", "8");
                     break;
             }
             // add the bot to the map

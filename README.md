@@ -24,6 +24,20 @@ Open the index.html file in a browser.
 * Obstacles have rock/paper/scissor properties
 * Objective is place bombs or steal data's
 * After last objective exit opens but npc's on alert
+* Add perspective foreshortening factor to overlap and compress y positions globally. 
+* Tiles closer to camera will overlap those further away slightly.
+* When tethering player is anchored.
+* Thetered bots are reeled in. The reeling has to be a minigame or button mash struggle to avoid idle time.
+* Movement input perpendicular to the tether direction breaks the link
+* Bigger bots reel slower 
+* Tethered bots shoot at player, who is very vulnerable 
+* Damage is inflicted on a health pool with constant regen with an elemental advantage/disadvantage.
+* Tether is like arm in bionic commando. Or the inflator in dig dug
+
+## Assets
+
+MagicaVoxel
+https://ephtracy.github.io/
 
 ## License
 
