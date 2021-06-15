@@ -4,7 +4,7 @@ A simple game engine using Javascript modules in a way that avoids the need for 
 
 ## Instructions
 
-Open the index.html file in a browser.
+Open the index.html file in a browser via a localhost.
 
 ## Plan
 
