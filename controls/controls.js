@@ -11,6 +11,7 @@ export class Controls {
         this.primary = false;
         this.secondary = false;
         // add keyboard controls
+        // TODO: keyboard/controller/touchscreen should be seperate sub-modules, which each get the input vectors and update function
         document.addEventListener("keydown", this.onPressed.bind(this));
         document.addEventListener("keyup", this.onReleased.bind(this));
         // add touch controls
