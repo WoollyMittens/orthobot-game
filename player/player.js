@@ -15,7 +15,7 @@ export class Player {
         player.setAttribute("class", "ob-player");
         player.setAttribute("data-variant", "");
         player.setAttribute("data-direction", "S");
-        player.setAttribute("data-acceleration", "");
+        player.setAttribute("data-acceleration", "0");
         player.setAttribute("data-horizontal", "0");
         player.setAttribute("data-vertical", "0");
         player.setAttribute("data-topspeed", "128");

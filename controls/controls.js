@@ -1,6 +1,8 @@
 export class Controls {
     constructor(model) {
         this.model = model;
+        // smoothing delay
+        this.delay = null;
         // input vectors
         this.north = false;
         this.east = false;
@@ -27,7 +29,6 @@ export class Controls {
             case " ": break;
         }
         // update the attributes
-        // TODO: delay to buffer uneven presses
         this.update();
     }
 
@@ -41,21 +42,29 @@ export class Controls {
             case "d": this.east = false; break;
             case " ": break;
         }
-        // update the player status attributes
-        // TODO: delay buffer uneven releases
+        // update the attributes
         this.update();
     }
 
     update = function () {
-        // if any direction pressed
-            // update the attributes
-            var directions = [];
-            if (this.north) directions.push("N");
-            if (this.east) directions.push("E");
-            if (this.south) directions.push("S");
-            if (this.west) directions.push("W");
-            this.model.player.setAttribute("data-direction", directions.join(""));
-        // else leave last direction intact
+        // wait for key jitter
+        clearTimeout(this.delay);
+        this.delay = setTimeout(() => {
+            // if there is any direction input
+            if (this.north || this.east || this.south || this.west) {
+                // update the movement attributes
+                var directions = [];
+                if (this.north) directions.push("N");
+                if (this.east) directions.push("E");
+                if (this.south) directions.push("S");
+                if (this.west) directions.push("W");
+                this.model.player.setAttribute("data-direction", directions.join(""));
+                this.model.player.setAttribute("data-acceleration", "1");
+            } else {
+                // or halt the motion
+                this.model.player.setAttribute("data-acceleration", "0");
+            }
+        }, 50);
     }
 
     end = function () {
