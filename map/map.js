@@ -1,3 +1,5 @@
+// TODO: import type behaviours from an external file
+
 export class Map {
     constructor(model) {
         this.model = model;

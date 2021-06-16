@@ -1,3 +1,5 @@
+// TODO: import types and behaviours from external files
+
 export class Bots {
     constructor(model) {
         this.model = model;
