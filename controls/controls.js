@@ -19,7 +19,9 @@ export class Controls {
         // add keyboard controls
         this.keyboard = new Keyboard(this.vectors, this.update.bind(this));
         // add touchscreen controls
+        this.touchscreen = new Touchscreen(this.vectors, this.update.bind(this));
         // add joypad controls
+        this.joypad = new Joypad(this.vectors, this.update.bind(this));
         console.log('adding controls to:', model.viewport);
     }
 
@@ -31,16 +33,18 @@ export class Controls {
             if (this.vectors.north || this.vectors.east || this.vectors.south || this.vectors.west) {
                 // update the movement attributes
                 var directions = [];
-                if (this.vectors.north) directions.push("N");
-                if (this.vectors.east) directions.push("E");
-                if (this.vectors.south) directions.push("S");
-                if (this.vectors.west) directions.push("W");
+                if (this.vectors.north) { directions.push("N") }
+                else if (this.vectors.south) { directions.push("S") }
+                if (this.vectors.east) { directions.push("E") }
+                else if (this.vectors.west) { directions.push("W") }
                 this.model.player.setAttribute("data-direction", directions.join(""));
                 this.model.player.setAttribute("data-acceleration", "1");
             } else {
                 // or halt the motion
                 this.model.player.setAttribute("data-acceleration", "0");
             }
+            // register the primary input
+            // register the secondary input
         }, 50);
     }
 
