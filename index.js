@@ -7,6 +7,7 @@ import { Player } from "./player/player.js";
 import { Shots } from "./shots/shots.js";
 import { Background } from "./background/background.js";
 import { Controls } from "./controls/controls.js";
+import { Sounds } from "./sounds/sounds.js";
 
 class OrthoBot {
     constructor(model) {
@@ -29,6 +30,7 @@ class OrthoBot {
         this.player = new Player(this.model);
         this.shots = new Shots(this.model);
         this.controls = new Controls(this.model);
+        this.sounds = new Sounds(this.model);
         // start the timer
         this.model.time = new Date().getTime();
     }
@@ -53,6 +55,7 @@ class OrthoBot {
         this.bots.update(interval);
         this.player.update(interval);
         this.shots.update(interval);
+        this.sounds.update(interval);
         // request the next redraw
         //window.requestAnimationFrame(this.update.bind(this));
     }

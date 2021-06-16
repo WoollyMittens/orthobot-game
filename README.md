@@ -34,6 +34,16 @@ Open the index.html file in a browser via a localhost.
 * Damage is inflicted on a health pool with constant regen with an elemental advantage/disadvantage.
 * Tether is like arm in bionic commando. Or the inflator in dig dug
 
+## Controllers
+
+Gamepad API
+https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
+
+## Sound
+
+Web Audio API
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
+
 ## Assets
 
 MagicaVoxel

@@ -1,8 +1,9 @@
+@import url("./background/background.css");
 @import url("./bots/bots.css");
+@import url("./controls/controls.css");
 @import url("./map/map.css");
 @import url("./player/player.css");
 @import url("./shots/shots.css");
-@import url("./storage/storage.css");
 
 *,
 :after,
