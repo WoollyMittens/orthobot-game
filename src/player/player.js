@@ -37,14 +37,10 @@ export class Player {
     }
  
     update = function(interval) {
-        // handle the flags
-        // handle tile exit
-            // remove flag of exited tile
-        // handle tile entry
-            // add flag to entered tile
-        // handle tile collisions
-            // add flag to touched tile
-        // handle bot collisions
-            // add flag to touched bot
+        // handle the flags put on the player
+        // update the position
+            // check the tile conditions
+                // and continue
+                // or stop
     }
 }
