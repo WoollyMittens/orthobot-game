@@ -1,4 +1,4 @@
-// TODO: import type behaviours from an external file
+import { attributes } from "./attributes.js";
 
 export class Map {
     constructor(model) {
@@ -13,9 +13,19 @@ export class Map {
         var tile = document.createElement("div");
         var col = index % this.model.colcount;
         var row = Math.floor(index / this.model.colcount);
+        // common properties
         tile.setAttribute("class", "ob-tile");
         tile.setAttribute("data-variant", char);
-        tile.setAttribute("data-light", "0");
+        tile.setAttribute("data-row", col);
+        tile.setAttribute("data-col", row);
+        // specific properties
+        for (var key in attributes["common"]) {
+            tile.setAttribute("data-" + key, attributes["common"][key]);
+        }
+        // specific properties
+        for (var key in attributes[char]) {
+            tile.setAttribute("data-" + key, attributes[char][key]);
+        }
         // position it on the grid
         Object.assign(tile.style, {
             left: (col * this.model.gridsize) + "px",
@@ -31,17 +41,8 @@ export class Map {
     }
 
     resolve = function (tile) {
-        // global handlers
-            // reduce the illumination level by one
-        // specific handlers
-        switch (tile.getAttribute("data-variant")) {
-            case "A":
-                // handle the relevant attributes for this tile
-                break;
-            case "B":
-                // handle the relevant attributes for this tile
-                break;
-        }
+        // reduce the illumination level by one
+        // check if any global conditions have been met
     }
 
     update = function (interval) {

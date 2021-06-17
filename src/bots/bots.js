@@ -43,10 +43,13 @@ export class Bots {
     resolve = function (bot) {
         // get the patrol type
         // update the movement
-            // if there is a wall ahead
-                // follow the patrol type
+            // check the tile conditions
+                // and continue onwards
+                // or apply patrol rule
             // if there is a bot ahead
+                // apply patrol rule
             // if the player is ahead
+                // stop
         // extend the light cone
             // if the player is in the cone
                 // launch projectile

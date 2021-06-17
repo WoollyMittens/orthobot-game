@@ -2,7 +2,7 @@ export class Player {
     constructor(model) {
         this.model = model;
         // find the start position
-        var index = model.hash.match(/[A-Z]/g).indexOf("X");
+        var index = model.hash.match(/[A-Z]/g).indexOf("Y");
         var col = index % model.rowcount + 0.5;
         var row = Math.floor(index / model.rowcount) + 0.5;
         console.log("creating player at:", col, row);
@@ -26,8 +26,7 @@ export class Player {
         player.setAttribute("data-row", "1");
         player.setAttribute("data-col", "1");
         // for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
-        player.setAttribute("data-defence", "1");
-        player.setAttribute("data-offence", "1");
+        player.setAttribute("data-element", "0");
         Object.assign(player.style, {
             left: (col * this.model.gridsize) + "px",
             top: (row * this.model.gridsize * this.model.foreshorten) + "px",
