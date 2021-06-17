@@ -8,7 +8,7 @@ export class Storage {
     }
 
     get hash() {
-        return document.location.hash.substr(1);
+        return document.location.hash.substr(1) || "A1";
     }
 
     get colcount() {
