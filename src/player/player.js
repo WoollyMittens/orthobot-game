@@ -1,3 +1,5 @@
+import { attributes } from "./attributes.js";
+
 export class Player {
     constructor(model) {
         this.model = model;
@@ -13,20 +15,11 @@ export class Player {
         // construct player entity at the entrance tile
         var player = document.createElement('div');
         player.setAttribute("class", "ob-player");
-        player.setAttribute("data-variant", "");
-        player.setAttribute("data-direction", "S");
-        player.setAttribute("data-acceleration", "0");
-        player.setAttribute("data-horizontal", "0");
-        player.setAttribute("data-vertical", "0");
-        player.setAttribute("data-topspeed", "128");
-        player.setAttribute("data-health", "9");
-        player.setAttribute("data-regen", "1");
-        player.setAttribute("data-reel", "stowed");
-        player.setAttribute("data-status", "idle");
-        player.setAttribute("data-row", "1");
-        player.setAttribute("data-col", "1");
-        // for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
-        player.setAttribute("data-element", "0");
+        player.setAttribute("data-row", col);
+        player.setAttribute("data-col", row);
+        for (var key in attributes) {
+            player.setAttribute("data-" + key, attributes[key]);
+        }
         Object.assign(player.style, {
             left: (col * this.model.gridsize) + "px",
             top: (row * this.model.gridsize * this.model.foreshorten) + "px",
@@ -39,8 +32,11 @@ export class Player {
     update = function(interval) {
         // handle the flags put on the player
         // update the position
-            // check the tile conditions
-                // and continue
-                // or stop
+            // if the  col/row doesn't match the tile yet
+                // check the tile conditions
+                    // and stop
+                // or continue
+            // if there is a bot ahead
+                // stop
     }
 }

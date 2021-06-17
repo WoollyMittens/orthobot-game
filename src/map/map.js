@@ -18,7 +18,6 @@ export class Map {
         tile.setAttribute("data-variant", char);
         tile.setAttribute("data-row", col);
         tile.setAttribute("data-col", row);
-        // specific properties
         for (var key in attributes["common"]) {
             tile.setAttribute("data-" + key, attributes["common"][key]);
         }

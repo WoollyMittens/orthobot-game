@@ -43,9 +43,10 @@ export class Bots {
     resolve = function (bot) {
         // get the patrol type
         // update the movement
-            // check the tile conditions
-                // and continue onwards
-                // or apply patrol rule
+            // if the  col/row doesn't match the tile yet
+                // check the tile conditions
+                    // and continue onwards
+                    // or apply patrol rule
             // if there is a bot ahead
                 // apply patrol rule
             // if the player is ahead
