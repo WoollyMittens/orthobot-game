@@ -1,4 +1,4 @@
-// TODO: import types and behaviours from external files
+import { attributes } from "./attributes.js";
 
 export class Bots {
     constructor(model) {
@@ -16,43 +16,17 @@ export class Bots {
             var bot = document.createElement("div");
             var col = count % this.model.rowcount + 0.5;
             var row = Math.floor(count / this.model.rowcount) + 0.5;
-            // global properties
+            // common properties
             bot.setAttribute("class", "ob-bot");
             bot.setAttribute("data-variant", char);
             bot.setAttribute("data-row", col);
             bot.setAttribute("data-col", row);
-            bot.setAttribute("data-direction", "S");
-            bot.setAttribute("data-acceleration", "0");
-            bot.setAttribute("data-horizontal", "0");
-            bot.setAttribute("data-vertical", "0");
-            bot.setAttribute("data-health", "9");
-            bot.setAttribute("data-status", "idle");
+            for (var key in attributes["common"]) {
+                bot.setAttribute("data-" + key, attributes["common"][key]);
+            }
             // specific properties
-            switch (char) {
-                case "a":
-                    bot.setAttribute("data-regen", "1");
-                    bot.setAttribute("data-defence", "1");
-                    bot.setAttribute("data-offence", "1");
-                    bot.setAttribute("data-topspeed", "128");
-                    bot.setAttribute("data-patrol", "hunt");
-                    bot.setAttribute("data-range", "4");
-                    break;
-                case "b":
-                    bot.setAttribute("data-regen", "2");
-                    bot.setAttribute("data-defence", "2");
-                    bot.setAttribute("data-offence", "2");
-                    bot.setAttribute("data-topspeed", "96");
-                    bot.setAttribute("data-patrol", "clockwise");
-                    bot.setAttribute("data-range", "6");
-                    break;
-                case "b":
-                    bot.setAttribute("data-regen", "3");
-                    bot.setAttribute("data-defence", "3");
-                    bot.setAttribute("data-offence", "3");
-                    bot.setAttribute("data-topspeed", "64");
-                    bot.setAttribute("data-patrol", "reverse");
-                    bot.setAttribute("data-range", "8");
-                    break;
+            for (var key in attributes[char]) {
+                bot.setAttribute("data-" + key, attributes[char][key]);
             }
             // add the bot to the map
             Object.assign(bot.style, {
@@ -67,14 +41,15 @@ export class Bots {
     }
  
     resolve = function (bot) {
-        switch (bot.getAttribute("data-variant")) {
-            case "a":
-                // handle the relevant attributes for this bot
-                break;
-            case "b":
-                // handle the relevant attributes for this bot
-                break;
-        }
+        // get the patrol type
+        // update the movement
+            // if there is a wall ahead
+                // follow the patrol type
+            // if there is a bot ahead
+            // if the player is ahead
+        // extend the light cone
+            // if the player is in the cone
+                // launch projectile
     }
 
     update = function(interval) {
