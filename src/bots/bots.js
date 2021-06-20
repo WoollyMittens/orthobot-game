@@ -7,6 +7,8 @@ export class Bots {
         model.bots = [];
         this.model.hash.split("").forEach((char, index) => this.add(char, index));
         console.log('adding bots:', model.bots);
+        // render the b ots
+        this.update(0);
     }
 
     add = function(char, index) {
@@ -14,13 +16,15 @@ export class Bots {
             // create a tile object
             var count = index - this.model.bots.length;
             var bot = document.createElement("div");
-            var col = count % this.model.rowcount + 0.5;
-            var row = Math.floor(count / this.model.rowcount) + 0.5;
+            var col = count % this.model.rowcount;
+            var row = Math.floor(count / this.model.rowcount);
             // common properties
             bot.setAttribute("class", "ob-bot");
             bot.setAttribute("data-variant", char);
             bot.setAttribute("data-row", col);
             bot.setAttribute("data-col", row);
+            bot.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
+            bot.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
             for (var key in attributes["common"]) {
                 bot.setAttribute("data-" + key, attributes["common"][key]);
             }
@@ -29,18 +33,21 @@ export class Bots {
                 bot.setAttribute("data-" + key, attributes[char][key]);
             }
             // add the bot to the map
-            Object.assign(bot.style, {
-                left: (col * this.model.gridsize) + "px",
-                top: (row * this.model.gridsize * this.model.foreshorten) + "px",
-                zIndex: row * 1000
-            });
             this.model.background.appendChild(bot);
             // return the bot for future reference
             this.model.bots.push(bot);
         }
     }
+
+    render = function(bot) {
+        // translate the player's attributes into styles
+        bot.style.transform = "translate3d(" 
+            + bot.getAttribute("data-x") + "px,"
+            + bot.getAttribute("data-y") + "px," 
+            + bot.getAttribute("data-y") + "px)";
+    }
  
-    resolve = function (bot) {
+    resolve = function (bot, interval) {
         // get the patrol type
         // update the movement
             // if the  col/row doesn't match the tile yet
@@ -57,7 +64,9 @@ export class Bots {
     }
 
     update = function(interval) {
-        // for every bot
-        this.model.bots.forEach(bot => this.resolve(bot));
+        // process all changes
+        this.model.bots.forEach(bot => this.resolve(bot, interval));
+        // render all bots
+        this.model.bots.forEach(bot => this.render(bot));
     }
 }

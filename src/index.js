@@ -47,7 +47,7 @@ class OrthoBot {
     update() {
         // update the timer
         var time = new Date().getTime();
-        var interval = (time - this.model.time) / 1000;
+        var interval = time - this.model.time;
         this.model.time = time;
         // update the components
         this.background.update(interval);
@@ -57,7 +57,7 @@ class OrthoBot {
         this.shots.update(interval);
         this.sounds.update(interval);
         // request the next redraw
-        //window.requestAnimationFrame(this.update.bind(this));
+        window.requestAnimationFrame(this.update.bind(this));
     }
 };
 

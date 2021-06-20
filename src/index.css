@@ -38,11 +38,3 @@ a {
     margin: 0 auto;
     position: relative
 }
-
-.ob-background {
-    position: relative;
-    width: 128rem;
-    height: 128rem;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0)
-}

@@ -6,6 +6,8 @@ export class Map {
         // construct tile objects out of the upper case tile codes
         model.map = model.hash.match(/[A-Z]/g).map((char, index) => this.add(char, index));
         console.log('constructing map:', model.map);
+        // render the map
+        this.update(0);
     }
 
     add = function(char, index) {
@@ -18,6 +20,8 @@ export class Map {
         tile.setAttribute("data-variant", char);
         tile.setAttribute("data-row", col);
         tile.setAttribute("data-col", row);
+        tile.setAttribute("data-x",  col * this.model.gridsize);
+        tile.setAttribute("data-y", row * this.model.gridsize * this.model.foreshorten);
         for (var key in attributes["common"]) {
             tile.setAttribute("data-" + key, attributes["common"][key]);
         }
@@ -25,18 +29,24 @@ export class Map {
         for (var key in attributes[char]) {
             tile.setAttribute("data-" + key, attributes[char][key]);
         }
-        // position it on the grid
-        Object.assign(tile.style, {
-            left: (col * this.model.gridsize) + "px",
-            top: (row * this.model.gridsize * this.model.foreshorten) + "px",
-            width: this.model.gridsize + "px",
-            height: this.model.gridsize + "px",
-            zIndex: row * 1000
-        });
+
         // add the tile to the background layer
         this.model.background.appendChild(tile);
         // return the tile for future reference
         return tile;
+    }
+
+    render = function (tile) {
+        // size the tile
+        Object.assign(tile.style, {
+            width: this.model.gridsize + "px",
+            height: this.model.gridsize + "px",
+        });
+        // position it on the grid
+        tile.style.transform = "translate3d(" 
+            + tile.getAttribute("data-x") + "px,"
+            + tile.getAttribute("data-y") + "px," 
+            + tile.getAttribute("data-y") + "px)";
     }
 
     resolve = function (tile) {
@@ -45,7 +55,9 @@ export class Map {
     }
 
     update = function (interval) {
-        // for every tile
+        // process all changes
         this.model.map.forEach(tile => this.resolve(tile));
+        // render all bots
+        this.model.map.forEach(tile => this.render(tile));
     }
 }
