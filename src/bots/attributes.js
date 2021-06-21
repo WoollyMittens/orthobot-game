@@ -10,6 +10,7 @@ export const attributes = {
     "a": {
         "regen": 3,
         "armor": 1,
+        "weapon": 1,
         "element": 1,
         "topspeed": 128,
         "patrol": "hunt",
@@ -18,6 +19,7 @@ export const attributes = {
     "b": {
         "regen": 2,
         "armor": 2,
+        "weapon": 1,
         "element": 2,
         "topspeed": 96,
         "patrol": "clockwise",
@@ -26,6 +28,7 @@ export const attributes = {
     "c": {
         "regen": 1,
         "armor": 3,
+        "weapon": 1,
         "element": 3,
         "topspeed": 64,
         "patrol": "reverse",

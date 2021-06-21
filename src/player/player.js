@@ -47,8 +47,8 @@ export class Player {
         player.setAttribute("data-col", row);
         player.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
         player.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
-        for (var key in attributes) {
-            player.setAttribute("data-" + key, attributes[key]);
+        for (var key in attributes["common"]) {
+            bot.setAttribute("data-" + key, attributes["common"][key]);
         }
         this.model.background.appendChild(player);
         return player;
