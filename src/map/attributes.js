@@ -1,55 +1,67 @@
 export const attributes = {
     "common": {
+        // TODO: every cycle decays the light level down to 0. Bots' light cones will increase the value back to 9
         "light": 0,
-        "occupied": ""
+        "occupied": "",
+        "interacted": ""
     },
     // wall
     "A": {
-        "passage": "none"
+        "type": "wall"
     },
     // floor
     "B": {
-        "passage": "all"
+        "type": "floor"
     },
     // gate
     "C": {
-        "passage": "conditional",
-        "property": "element",
-        "value": "1",
-        "condition": "false"
+        "type": "gate",
+        "element": "1"
     },
     // door
     "D": {
-        "passage": "conditional",
-        "target": "E",
-        "property": "status",
-        "value": "on",
-        "condition": "false"
+        "type": "door",
+        "watch": "F",
+        "value": "closed"
     },
-    // switch
+    // wall switch - TODO: query all switches, if marked as interacted, toggle the value
     "E": {
-        "passage": "all",
-        "toggle": "on,off",
-        "status": "off"
+        "type": "switch",
+        "value": "off"
+    },
+    // floor trigger - TODO: query all triggers, if occupied, set the value
+    "F": {
+        "type": "trigger",
+        "value": "off"
+    },
+    // alarm - TODO: if the alarms are active switch all bots to hunt mode. open guard doors. close blast doors
+    "G": {
+        "type": "alarm",
+        "watch": "X",
+        "value": "off"
+    },
+    // void - TODO: player and bots can't traverse, but projectiles can
+    "H": {
+        "type": "gap"
+    },
+    // bridge
+    "I": {
+        "type": "bridge",
+        "value": "closed"
     },
     // objective
     "X": {
-        "passage": "player",
-        "toggle": "on,off",
-        "status": "off"
+        "type": "objective",
+        "value": "off"
     },
     // start
     "Y": {
-        "passage": "all"
+        "type": "entrance"
     },
     // goal
     "Z": {
-        "passage": "conditional",
-        "target": "X",
-        "property": "status",
-        "value": "on",
-        "condition": "false",
-        "global": "alarm",
-        "trigger": "exit"
+        "type": "exit",
+        "watch": "X",
+        "value": "closed"
     }
 }

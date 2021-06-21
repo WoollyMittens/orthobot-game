@@ -29,6 +29,7 @@ export const attributes = {
         "element": 3,
         "topspeed": 64,
         "patrol": "reverse",
+        // TODO: light cone value and distance
         "range": 8
     }
 }

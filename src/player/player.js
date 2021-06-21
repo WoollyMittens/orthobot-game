@@ -14,29 +14,6 @@ export class Player {
         this.update(0);
     }
 
-    add = function (col, row) {
-        // construct player entity at the entrance tile
-        var player = document.createElement('div');
-        player.setAttribute("class", "ob-player");
-        player.setAttribute("data-row", col);
-        player.setAttribute("data-col", row);
-        player.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
-        player.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
-        for (var key in attributes) {
-            player.setAttribute("data-" + key, attributes[key]);
-        }
-        this.model.background.appendChild(player);
-        return player;
-    }
-
-    render = function (player) {
-        // translate the player's attributes into styles
-        player.style.transform = "translate3d("
-            + player.getAttribute("data-x") + "px,"
-            + player.getAttribute("data-y") + "px,"
-            + player.getAttribute("data-y") + "px)";
-    }
-
     get position() {
         var player = this.model.player;
         return {
@@ -62,62 +39,129 @@ export class Player {
         player.setAttribute("data-y", data.y.toFixed(3));
     }
 
-    resolve = function (player, interval) {
-        // handle the flags put on the player
-            // apply regen
-            // apply damage
+    add = function (col, row) {
+        // construct player entity at the entrance tile
+        var player = document.createElement('div');
+        player.setAttribute("class", "ob-player");
+        player.setAttribute("data-row", col);
+        player.setAttribute("data-col", row);
+        player.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
+        player.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
+        for (var key in attributes) {
+            player.setAttribute("data-" + key, attributes[key]);
+        }
+        this.model.background.appendChild(player);
+        return player;
+    }
 
-        // fetch the current position
-        var current = this.position;
+    render = function (player) {
+        // translate the player's attributes into styles
+        player.style.transform = "translate3d("
+            + player.getAttribute("data-x") + "px,"
+            + player.getAttribute("data-y") + "px,"
+            + player.getAttribute("data-y") + "px)";
+    }
 
-        // create the new position
+    movement = function (current, interval) {
         var next = {};
-
         // apply the deceleration
         next.horizontal = current.horizontal / (1 + interval * this.model.actuation);
         next.vertical = current.vertical / (1 + interval * this.model.actuation);
-
         // apply the acceleration
         if (/E/.test(current.direction)) {
             next.horizontal = Math.min(
-                next.horizontal + current.acceleration * interval, 
+                next.horizontal + current.acceleration * interval,
                 current.topspeed
             )
         }
-        else if (/W/.test(current.direction)) { 
+        else if (/W/.test(current.direction)) {
             next.horizontal = Math.max(
-                next.horizontal - current.acceleration * interval, 
+                next.horizontal - current.acceleration * interval,
                 -current.topspeed
-            ) 
+            )
         }
-        if (/S/.test(current.direction)) { 
+        if (/S/.test(current.direction)) {
             next.vertical = Math.min(
-                next.vertical + current.acceleration * interval, 
+                next.vertical + current.acceleration * interval,
                 current.topspeed
             )
         }
-        else if (/N/.test(current.direction)) { 
+        else if (/N/.test(current.direction)) {
             next.vertical = Math.max(
-                next.vertical - current.acceleration * interval, 
+                next.vertical - current.acceleration * interval,
                 -current.topspeed
             )
         }
-
         // calculate the new position
         next.x = current.x + next.horizontal * interval;
         next.y = current.y + next.vertical * interval;
         next.col = parseInt(next.x / this.model.gridsize);
         next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
+        // return the applied movement
+        return next;
+    }
 
-        // correct the new position for tile
-        // if the  col/row doesn't match the tile yet
-        // check the tile conditions
-        // and stop
-        // or continue
+    environment = function (current, next) {
+        // correct the movement for map collisions
+        var colchange = (next.col !== current.col);
+        var rowchange = (next.row !== current.row);
+        var condition = true;
+        if (colchange || rowchange) {
+            var tile = this.model.background.querySelector('.ob-tile[data-col="' + next.col + '"][data-row="' + next.row + '"]');
+            var type = tile.getAttribute("data-type");
+            // pick a way to deal with this tile
+            switch (type) {
+                case "alarm":
+                case "switch":
+                case "gap":
+                case "wall":
+                    condition = false;
+                    break;
+                case "gate":
+                    condition = (this.model.player.getAttribute("data-element") === tile.getAttribute("data-element"));
+                    break;
+                case "exit":
+                case "bridge":
+                case "door":
+                    condition = (this.model.player.getAttribute("data-value") === "open");
+                    break;
+            }
+        }
+        // or correct the movement
+        if (!condition && colchange) {
+            // halt the movement
+            next.x = current.x;
+            next.col = current.col;
+            next.horizontal = 0;
+        }
+        if (!condition && rowchange) {
+            // halt the movement
+            next.y = current.y;
+            next.row = current.row;
+            next.vertical = 0;
+        }
+    }
 
-        // correct the new position for bot collisions
-        // if there is a bot ahead
-        // stop
+    inhabitants = function (current, next) {
+
+    }
+
+    resolve = function (player, interval) {
+        // handle the flags put on the player
+        // apply regen
+        // apply damage
+
+        // fetch the current position
+        var current = this.position;
+
+        // calculate the new position
+        var next = this.movement(current, interval);
+
+        // check for collisions with the tiles
+        this.environment(current, next);
+
+        // check for collisions with the bots
+        this.inhabitants(current, next);
 
         // apply the new position
         this.position = next;
@@ -128,6 +172,5 @@ export class Player {
         this.resolve(this.model.player, interval);
         // render the player
         this.render(this.model.player);
-
     }
 }

@@ -18,8 +18,8 @@ export class Map {
         // common properties
         tile.setAttribute("class", "ob-tile");
         tile.setAttribute("data-variant", char);
-        tile.setAttribute("data-row", col);
-        tile.setAttribute("data-col", row);
+        tile.setAttribute("data-row", row);
+        tile.setAttribute("data-col", col);
         tile.setAttribute("data-x",  col * this.model.gridsize);
         tile.setAttribute("data-y", row * this.model.gridsize * this.model.foreshorten);
         for (var key in attributes["common"]) {
@@ -29,7 +29,6 @@ export class Map {
         for (var key in attributes[char]) {
             tile.setAttribute("data-" + key, attributes[char][key]);
         }
-
         // add the tile to the background layer
         this.model.background.appendChild(tile);
         // return the tile for future reference
