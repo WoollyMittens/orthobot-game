@@ -47,7 +47,7 @@ class OrthoBot {
     update() {
         // update the timer
         var time = new Date().getTime();
-        var interval = time - this.model.time;
+        var interval = (time - this.model.time) / 1000;
         this.model.time = time;
         // update the components
         this.background.update(interval);
@@ -66,6 +66,8 @@ var orthoBot = new OrthoBot ({
     viewport: document.querySelector(".ob-viewport"),
     // size of the background tiles
     gridsize: 128,
+    // actuation multiplier
+    actuation: 20,
     // distort this much for isometric view
     foreshorten: 0.75
 });

@@ -4,7 +4,7 @@ export const attributes = {
     "acceleration": 0,
     "horizontal": 0,
     "vertical": 0,
-    "topspeed": 1024,
+    "topspeed": 128,
     "health": 9,
     "regen": 1,
     "reel": "stowed",

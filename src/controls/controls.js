@@ -7,6 +7,8 @@ export class Controls {
         this.model = model;
         // smoothing delay
         this.delay = null;
+        // accelerating force
+        this.acceleration = this.model.gridsize * this.model.actuation;
         // input vectors
         this.vectors = {
             north: false,
@@ -38,7 +40,7 @@ export class Controls {
                 if (this.vectors.east) { directions.push("E") }
                 else if (this.vectors.west) { directions.push("W") }
                 this.model.player.setAttribute("data-direction", directions.join(""));
-                this.model.player.setAttribute("data-acceleration", "1");
+                this.model.player.setAttribute("data-acceleration", this.acceleration);
             } else {
                 // or halt the motion
                 this.model.player.setAttribute("data-acceleration", "0");

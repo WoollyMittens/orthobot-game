@@ -14,7 +14,7 @@ export class Player {
         this.update(0);
     }
 
-    add = function(col, row) {
+    add = function (col, row) {
         // construct player entity at the entrance tile
         var player = document.createElement('div');
         player.setAttribute("class", "ob-player");
@@ -29,69 +29,101 @@ export class Player {
         return player;
     }
 
-    render = function(player) {
+    render = function (player) {
         // translate the player's attributes into styles
-        player.style.transform = "translate3d(" 
+        player.style.transform = "translate3d("
             + player.getAttribute("data-x") + "px,"
-            + player.getAttribute("data-y") + "px," 
+            + player.getAttribute("data-y") + "px,"
             + player.getAttribute("data-y") + "px)";
     }
 
-    resolve = function(player, interval) {
-        // handle the flags put on the player
-            // apply regen
-            // apply damage
-        
-        // fetch the current position
-        var acceleration = parseInt(player.getAttribute("data-acceleration"));
-        var direction = player.getAttribute("data-direction");
-        var topspeed = parseInt(player.getAttribute("data-topspeed"));
-        var horizontal = parseInt(player.getAttribute("data-horizontal"));
-        var vertical = parseInt(player.getAttribute("data-vertical"));
-        var current = {
+    get position() {
+        var player = this.model.player;
+        return {
+            "acceleration": parseInt(player.getAttribute("data-acceleration")),
+            "direction": player.getAttribute("data-direction"),
+            "topspeed": parseInt(player.getAttribute("data-topspeed")),
+            "horizontal": parseFloat(player.getAttribute("data-horizontal")),
+            "vertical": parseFloat(player.getAttribute("data-vertical")),
             "col": parseInt(player.getAttribute("data-col")),
             "row": parseInt(player.getAttribute("data-row")),
             "x": parseFloat(player.getAttribute("data-x")),
             "y": parseFloat(player.getAttribute("data-y"))
         }
+    }
+
+    set position(data) {
+        var player = this.model.player;
+        player.setAttribute("data-horizontal", data.horizontal.toFixed(3));
+        player.setAttribute("data-vertical", data.vertical.toFixed(3));
+        player.setAttribute("data-col", data.col);
+        player.setAttribute("data-row", data.row);
+        player.setAttribute("data-x", data.x.toFixed(3));
+        player.setAttribute("data-y", data.y.toFixed(3));
+    }
+
+    resolve = function (player, interval) {
+        // handle the flags put on the player
+            // apply regen
+            // apply damage
+
+        // fetch the current position
+        var current = this.position;
+
+        // create the new position
+        var next = {};
 
         // apply the deceleration
-        horizontal = horizontal / (1 + interval / 100);
-        vertical = vertical  / (1 + interval / 100);
-    
+        next.horizontal = current.horizontal / (1 + interval * this.model.actuation);
+        next.vertical = current.vertical / (1 + interval * this.model.actuation);
+
         // apply the acceleration
-        if (/E/.test(direction)) { horizontal = Math.min(horizontal + acceleration * this.model.gridsize * interval, topspeed) }
-        else if (/W/.test(direction)) { horizontal = Math.max(horizontal - acceleration * this.model.gridsize * interval, -topspeed) }
-        if (/S/.test(direction)) { vertical = Math.min(vertical + acceleration * this.model.gridsize * interval, topspeed) }
-        else if (/N/.test(direction)) { vertical = Math.max(vertical - acceleration * this.model.gridsize * interval, -topspeed) }
+        if (/E/.test(current.direction)) {
+            next.horizontal = Math.min(
+                next.horizontal + current.acceleration * interval, 
+                current.topspeed
+            )
+        }
+        else if (/W/.test(current.direction)) { 
+            next.horizontal = Math.max(
+                next.horizontal - current.acceleration * interval, 
+                -current.topspeed
+            ) 
+        }
+        if (/S/.test(current.direction)) { 
+            next.vertical = Math.min(
+                next.vertical + current.acceleration * interval, 
+                current.topspeed
+            )
+        }
+        else if (/N/.test(current.direction)) { 
+            next.vertical = Math.max(
+                next.vertical - current.acceleration * interval, 
+                -current.topspeed
+            )
+        }
 
         // calculate the new position
-        var next = {};
-        next.x = current.x + horizontal / 1000;
-        next.y = current.y + vertical / 1000;
+        next.x = current.x + next.horizontal * interval;
+        next.y = current.y + next.vertical * interval;
         next.col = parseInt(next.x / this.model.gridsize);
         next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
 
         // correct the new position for tile
-            // if the  col/row doesn't match the tile yet
-                // check the tile conditions
-                    // and stop
-                // or continue
+        // if the  col/row doesn't match the tile yet
+        // check the tile conditions
+        // and stop
+        // or continue
 
         // correct the new position for bot collisions
-            // if there is a bot ahead
-                // stop
+        // if there is a bot ahead
+        // stop
 
         // apply the new position
-        player.setAttribute("data-horizontal", horizontal);
-        player.setAttribute("data-vertical", vertical);
-        player.setAttribute("data-col", next.col);
-        player.setAttribute("data-row", next.row);
-        player.setAttribute("data-x", next.x.toFixed(3));
-        player.setAttribute("data-y", next.y.toFixed(3));
+        this.position = next;
     }
- 
-    update = function(interval) {
+
+    update = function (interval) {
         // process all changes
         this.resolve(this.model.player, interval);
         // render the player
