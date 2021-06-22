@@ -22,6 +22,7 @@ export class Player {
             "topspeed": parseInt(player.getAttribute("data-topspeed")),
             "horizontal": parseFloat(player.getAttribute("data-horizontal")),
             "vertical": parseFloat(player.getAttribute("data-vertical")),
+            "radius": player.offsetWidth / 2,
             "col": parseInt(player.getAttribute("data-col")),
             "row": parseInt(player.getAttribute("data-row")),
             "x": parseFloat(player.getAttribute("data-x")),
@@ -97,6 +98,7 @@ export class Player {
         next.y = current.y + next.vertical * interval;
         next.col = parseInt(next.x / this.model.gridsize);
         next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
+        next.radius = current.radius;
         // return the applied movement
         return next;
     }
@@ -143,34 +145,34 @@ export class Player {
     }
 
     inhabitants = function (current, next) {
-        // add the player hit box size
-        next.r = this.model.player.offsetWidth / 2;
         // check for all bots
-        var collision = false, bot = {};
         this.model.bots.forEach(bot => {
             // get the bot coordinates
-            bot.x = parseInt(bot.getAttribute("data-x"));
-            bot.y = parseInt(bot.getAttribute("data-y"));
-            bot.r = bot.offsetWidth / 2;
+            let x = parseInt(bot.getAttribute("data-x"));
+            let y = parseInt(bot.getAttribute("data-y"));
+            let radius = bot.offsetWidth / 2;
             // check if the two intersect
-            let above = next.y + next.r < bot.y - bot.r;
-            let rightof = next.x - next.r > bot.x + bot.r;
-            let below = next.y - next.r > bot.y + bot.r;
-            let leftof = next.x + next.r < bot.x - bot.r;
-            collision = collision || !(leftof || rightof || above || below);
-            // TODO: store the direction of the collision
+            let above = next.y + next.radius < y - radius;
+            let rightof = next.x - next.radius > x + radius;
+            let below = next.y - next.radius > y + radius;
+            let leftof = next.x + next.radius < x - radius;
+            // in case of collision
+            if (!(leftof || rightof || above || below)) {
+                console.log("collision!");
+                // don't allow getting closer
+                if (Math.abs(current.x - x) > Math.abs(next.x - x)) {
+                    next.x = current.x;
+                    next.col = current.col;
+                    next.horizontal = 0;
+                }
+                if (Math.abs(current.y - y) > Math.abs(next.y - y)) {
+                    next.y = current.y;
+                    next.row = current.row;
+                    next.vertical = 0;
+                }
+                return null;
+            }
         });
-        // if there was a collision
-        if (collision) {
-            console.log("collision!");
-            // halt the movement
-            // TODO: allow motion away from the collider
-            next.x = current.x;
-            next.y = current.y;
-            next.col = current.col;
-            next.row = current.row;
-        }
-
     }
 
     resolve = function (player, interval) {
