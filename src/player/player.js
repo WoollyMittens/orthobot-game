@@ -48,7 +48,7 @@ export class Player {
         player.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
         player.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
         for (var key in attributes["common"]) {
-            bot.setAttribute("data-" + key, attributes["common"][key]);
+            player.setAttribute("data-" + key, attributes["common"][key]);
         }
         this.model.background.appendChild(player);
         return player;
@@ -143,6 +143,33 @@ export class Player {
     }
 
     inhabitants = function (current, next) {
+        // add the player hit box size
+        next.r = this.model.player.offsetWidth / 2;
+        // check for all bots
+        var collision = false, bot = {};
+        this.model.bots.forEach(bot => {
+            // get the bot coordinates
+            bot.x = parseInt(bot.getAttribute("data-x"));
+            bot.y = parseInt(bot.getAttribute("data-y"));
+            bot.r = bot.offsetWidth / 2;
+            // check if the two intersect
+            let above = next.y + next.r < bot.y - bot.r;
+            let rightof = next.x - next.r > bot.x + bot.r;
+            let below = next.y - next.r > bot.y + bot.r;
+            let leftof = next.x + next.r < bot.x - bot.r;
+            collision = collision || !(leftof || rightof || above || below);
+            // TODO: store the direction of the collision
+        });
+        // if there was a collision
+        if (collision) {
+            console.log("collision!");
+            // halt the movement
+            // TODO: allow motion away from the collider
+            next.x = current.x;
+            next.y = current.y;
+            next.col = current.col;
+            next.row = current.row;
+        }
 
     }
 
