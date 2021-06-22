@@ -11,8 +11,8 @@ export const attributes = {
         "regen": 1,
         "armor": 0,
         "weapon": 1,
-        "reel": "stowed",
-        "status": "idle",
+        "reeling": 0,
+        "shooting": 0,
         // for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
         "element": 0
     },

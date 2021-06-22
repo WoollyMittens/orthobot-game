@@ -5,7 +5,7 @@ export const attributes = {
         "horizontal": 0,
         "vertical": 0,
         "health": 9,
-        "status": "idle"
+        "shooting": 0
     },
     "a": {
         "regen": 3,

@@ -179,6 +179,8 @@ export class Player {
         // handle the flags put on the player
         // apply regen
         // apply damage
+        // apply reeling
+        // apply shooting
 
         // fetch the current position
         var current = this.position;
