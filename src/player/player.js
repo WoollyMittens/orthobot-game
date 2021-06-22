@@ -94,9 +94,10 @@ export class Player {
             )
         }
         // calculate the new position
+        var lookahead = Math.sign(next.horizontal) * current.radius;
         next.x = current.x + next.horizontal * interval;
         next.y = current.y + next.vertical * interval;
-        next.col = parseInt(next.x / this.model.gridsize);
+        next.col = parseInt((next.x + lookahead) / this.model.gridsize);
         next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
         next.radius = current.radius;
         // return the applied movement
