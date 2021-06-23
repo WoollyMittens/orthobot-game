@@ -1,4 +1,4 @@
-import { Bot } from "./bot.js";
+import { Enemy } from "./enemy.js";
 
 export class Bots {
     constructor(model) {
@@ -6,10 +6,10 @@ export class Bots {
         this.model = model;
         this.model.bots = [];
         // construct non player entities out of the lower case tile codes
-        this.bots = [];
+        this.enemies = [];
         this.model.hash.split("").forEach((char, index) => {
             if (/[a-z]/.test(char)) {
-                this.bots.push(new Bot(model, char, index));
+                this.enemies.push(new Enemy(model, char, index));
             }
         });
         // render the bots
@@ -18,6 +18,6 @@ export class Bots {
 
     update = function(interval) {
         // update all bots
-        this.bots.forEach(bot => bot.update(interval));
+        this.enemies.forEach(enemy => enemy.update(interval));
     }
 }

@@ -1,6 +1,6 @@
 import { attributes } from "./attributes.js";
 
-export class Bot {
+export class Enemy {
     constructor(model, char, index) {
         // embrace the model
         this.model = model;
