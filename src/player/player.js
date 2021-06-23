@@ -62,10 +62,10 @@ export class Player {
 
     render = function () {
         // translate the player's attributes into styles
-        this.element.style.transform = "translate3d("
-            + this.element.getAttribute("data-x") + "px,"
-            + this.element.getAttribute("data-y") + "px,"
-            + this.element.getAttribute("data-y") + "px)";
+        this.element.style.transform = `translate3d(
+            ${this.element.getAttribute("data-x")}px, 
+            ${this.element.getAttribute("data-y")}px, 
+            ${this.element.getAttribute("data-y")}px)`;
     }
 
     movement = function (current, interval) {
@@ -114,7 +114,7 @@ export class Player {
         var rowchange = (next.row !== current.row);
         var condition = true;
         if (colchange || rowchange) {
-            var tile = this.model.background.querySelector('.ob-tile[data-col="' + next.col + '"][data-row="' + next.row + '"]');
+            var tile = this.model.background.querySelector(`.ob-tile[data-col="${next.col}"][data-row="${next.row}"]`);
             var type = tile.getAttribute("data-type");
             // pick a way to deal with this tile
             switch (type) {
