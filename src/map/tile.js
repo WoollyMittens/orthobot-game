@@ -22,6 +22,7 @@ export class Tile {
         tile.setAttribute("data-col", col);
         tile.setAttribute("data-x",  col * this.model.gridsize);
         tile.setAttribute("data-y", row * this.model.gridsize * this.model.foreshorten);
+        tile.setAttribute("data-z", row * this.model.gridsize * this.model.foreshorten + 1);
         for (var key in attributes["common"]) {
             tile.setAttribute("data-" + key, attributes["common"][key]);
         }
@@ -42,17 +43,44 @@ export class Tile {
         // check if any conditions have been met
     }
 
+    //  TODO: do this with get and set
+    attr = function (element, attribute) {
+        return parseFloat(element.getAttribute("data-" + attribute));
+    }
+
+    outofbounds = function (tx, ty) {
+        // check visibility
+        var bg = this.model.background;
+        var vp = this.model.viewport;
+        var grid = this.model.gridsize;
+        var bgx = this.attr(bg, "x");
+        var bgy = this.attr(bg, "y");
+        var tr = {
+            "top": ty + bgy,
+            "right": tx + grid + bgx,
+            "bottom": ty + grid + bgy,
+            "left": tx + bgx,
+        };
+        var vr = {
+            "top": 0,
+            "right": vp.offsetWidth,
+            "bottom": vp.offsetHeight,
+            "left": 0
+        };
+        return (tr.bottom < vr.top || tr.left > vr.right || tr.top > vr.bottom || tr.right < vr.left);
+    }
+
     render = function () {
-        // size the tile
+        var tx = this.attr(this.element, "x");
+        var ty = this.attr(this.element, "y");
+        var tz = this.attr(this.element, "z");
+        // position the tile
         Object.assign(this.element.style, {
             width: this.model.gridsize + "px",
             height: this.model.gridsize + "px",
+            display: (this.outofbounds(tx, ty)) ? "none" : "block",
+            transform: `translate3d(${tx}px, ${ty}px, ${tz}px)`
         });
-        // position it on the grid
-        this.element.style.transform = "translate3d(" 
-            + this.element.getAttribute("data-x") + "px,"
-            + this.element.getAttribute("data-y") + "px," 
-            + this.element.getAttribute("data-y") + "px)";
     }
 
     update = function (interval) {
