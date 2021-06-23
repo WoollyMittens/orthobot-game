@@ -9,7 +9,6 @@ export class Background {
             height: (model.rowcount * model.gridsize * model.foreshorten) + "px"
         });
         model.viewport.appendChild(model.background);
-        console.log("created background of", model.colcount, "x", model.rowcount, "tiles");
     }
 
     update = function(interval) {

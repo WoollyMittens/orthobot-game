@@ -2,14 +2,15 @@ import { attributes } from "./attributes.js";
 
 export class Player {
     constructor(model) {
+        // extend the model
         this.model = model;
+        this.model.player = null;
         // find the start position
         var index = model.hash.match(/[A-Z]/g).indexOf("Y");
         var col = index % model.rowcount;
         var row = Math.floor(index / model.rowcount);
         // create the player at the start position
-        console.log("creating player at:", col, row);
-        model.player = this.add(col, row);
+        this.element = this.add(col, row);
         // render the player
         this.update(0);
     }
@@ -51,16 +52,20 @@ export class Player {
         for (var key in attributes["common"]) {
             player.setAttribute("data-" + key, attributes["common"][key]);
         }
+        // add the player to the background
         this.model.background.appendChild(player);
+        // add the player to the model
+        this.model.player = player;
+        // return the created element
         return player;
     }
 
-    render = function (player) {
+    render = function () {
         // translate the player's attributes into styles
-        player.style.transform = "translate3d("
-            + player.getAttribute("data-x") + "px,"
-            + player.getAttribute("data-y") + "px,"
-            + player.getAttribute("data-y") + "px)";
+        this.element.style.transform = "translate3d("
+            + this.element.getAttribute("data-x") + "px,"
+            + this.element.getAttribute("data-y") + "px,"
+            + this.element.getAttribute("data-y") + "px)";
     }
 
     movement = function (current, interval) {
@@ -94,10 +99,9 @@ export class Player {
             )
         }
         // calculate the new position
-        var lookahead = Math.sign(next.horizontal) * current.radius;
         next.x = current.x + next.horizontal * interval;
         next.y = current.y + next.vertical * interval;
-        next.col = parseInt((next.x + lookahead) / this.model.gridsize);
+        next.col = parseInt((next.x + Math.sign(next.horizontal) * current.radius) / this.model.gridsize);
         next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
         next.radius = current.radius;
         // return the applied movement
@@ -135,13 +139,13 @@ export class Player {
             // halt the movement
             next.x = current.x;
             next.col = current.col;
-            next.horizontal = 0;
+            next.horizontal = -next.horizontal;
         }
         if (!condition && rowchange) {
             // halt the movement
             next.y = current.y;
             next.row = current.row;
-            next.vertical = 0;
+            next.vertical = -next.vertical;
         }
     }
 
@@ -159,24 +163,23 @@ export class Player {
             let leftof = next.x + next.radius < x - radius;
             // in case of collision
             if (!(leftof || rightof || above || below)) {
-                console.log("collision!");
                 // don't allow getting closer
                 if (Math.abs(current.x - x) > Math.abs(next.x - x)) {
                     next.x = current.x;
                     next.col = current.col;
-                    next.horizontal = 0;
+                    next.horizontal = -next.horizontal;
                 }
                 if (Math.abs(current.y - y) > Math.abs(next.y - y)) {
                     next.y = current.y;
                     next.row = current.row;
-                    next.vertical = 0;
+                    next.vertical = -next.vertical;
                 }
                 return null;
             }
         });
     }
 
-    resolve = function (player, interval) {
+    resolve = function (interval) {
         // handle the flags put on the player
         // apply regen
         // apply damage
@@ -201,8 +204,8 @@ export class Player {
 
     update = function (interval) {
         // process all changes
-        this.resolve(this.model.player, interval);
+        this.resolve(interval);
         // render the player
-        this.render(this.model.player);
+        this.render();
     }
 }

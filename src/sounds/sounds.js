@@ -1,7 +1,7 @@
 export class Sounds {
     constructor(model) {
+        // embrace the model
         this.model = model;
-        console.log('no sound');
     }
  
     update = function(interval) {}

@@ -4,6 +4,7 @@ import { Touchscreen } from "./touchscreen.js";
 
 export class Controls {
     constructor(model) {
+        // embrace the model
         this.model = model;
         // smoothing delay
         this.delay = null;
@@ -24,7 +25,6 @@ export class Controls {
         this.touchscreen = new Touchscreen(this.vectors, this.update.bind(this));
         // add joypad controls
         this.joypad = new Joypad(this.vectors, this.update.bind(this));
-        console.log('adding controls to:', model.viewport);
     }
 
     update = function () {

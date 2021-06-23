@@ -4,7 +4,6 @@ export class Keyboard {
         this.update = update;
         document.addEventListener("keydown", this.onPressed.bind(this));
         document.addEventListener("keyup", this.onReleased.bind(this));
-        console.log('keyboard controls wired');
     }
 
     onPressed = function (evt) {

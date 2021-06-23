@@ -1,7 +1,6 @@
 export class Storage {
     constructor(model) {
-        this.model = model;
-        // store the hash as tile codes
+        // extend the model
         model.hash = this.hash;
         model.colcount = this.colcount;
         model.rowcount = this.rowcount;

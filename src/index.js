@@ -4,14 +4,14 @@ import { Storage } from "./storage/storage.js";
 import { Map } from "./map/map.js";
 import { Bots } from "./bots/bots.js";
 import { Player } from "./player/player.js";
-import { Shots } from "./shots/shots.js";
+import { Projectiles } from "./projectiles/projectiles.js";
 import { Background } from "./background/background.js";
 import { Controls } from "./controls/controls.js";
 import { Sounds } from "./sounds/sounds.js";
 
 class OrthoBot {
     constructor(model) {
-        // store the model
+        // embrace the model
         this.model = model;
         // init the components
         this.init();
@@ -19,6 +19,8 @@ class OrthoBot {
         this.update();
         // reset when the url hash changes
         window.addEventListener("hashchange", this.reset.bind(this), false);
+        // report the status
+        console.log("model:", this.model);
     }
 
     init() {
@@ -28,7 +30,7 @@ class OrthoBot {
         this.map = new Map(this.model);
         this.bots = new Bots(this.model);
         this.player = new Player(this.model);
-        this.shots = new Shots(this.model);
+        this.projectiles = new Projectiles(this.model);
         this.controls = new Controls(this.model);
         this.sounds = new Sounds(this.model);
         // start the timer
@@ -54,7 +56,7 @@ class OrthoBot {
         this.map.update(interval);
         this.bots.update(interval);
         this.player.update(interval);
-        this.shots.update(interval);
+        this.projectiles.update(interval);
         this.sounds.update(interval);
         // request the next redraw
         window.requestAnimationFrame(this.update.bind(this));
@@ -67,7 +69,7 @@ var orthoBot = new OrthoBot ({
     // size of the background tiles
     gridsize: 128,
     // actuation multiplier
-    actuation: 20,
+    actuation: 10,
     // distort this much for isometric view
     foreshorten: 0.75
 });
