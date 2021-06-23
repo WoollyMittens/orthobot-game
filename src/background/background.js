@@ -26,20 +26,24 @@ export class Background {
             // set the global alarm attribute
         // get the viewport position
         var vp = {};
-        vp.x = this.model.viewport.offsetWidth / 2;
-        vp.y = this.model.viewport.offsetHeight / 2;
+        vp.w = this.model.viewport.offsetWidth;
+        vp.h = this.model.viewport.offsetHeight;
         // get the background position
         var bg = {}
         bg.x = parseFloat(this.model.background.getAttribute("data-x"));
         bg.y = parseFloat(this.model.background.getAttribute("data-y"));
+        bg.w = this.model.background.offsetWidth;
+        bg.h = this.model.background.offsetHeight;
         // get the player position
         var pl = {}
         pl.x = parseFloat(this.model.player.getAttribute("data-x"));
         pl.y = parseFloat(this.model.player.getAttribute("data-y"));
         // move the map if the player is too close to the edge
-        bg.x = vp.x - pl.x;
-        bg.y = vp.y - pl.y;
-        // TODO: ease towards the center instead of locking to it
+        bg.x += (vp.w / 2 - pl.x - bg.x) / this.model.actuation;
+        bg.y += (vp.h / 2 - pl.y - bg.y) / this.model.actuation;
+        // limit the viewport to the maps edges
+        bg.x = Math.max(Math.min(bg.x, 0), vp.w - bg.w);
+        bg.y = Math.max(Math.min(bg.y, 0), vp.h - bg.h);
         // translate the player's attributes into styles
         this.model.background.setAttribute("data-x", bg.x.toFixed(3));
         this.model.background.setAttribute("data-y", bg.y.toFixed(3));
