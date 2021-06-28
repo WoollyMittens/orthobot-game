@@ -30,14 +30,14 @@ export class Background {
         vp.h = this.model.viewport.offsetHeight;
         // get the background position
         var bg = {}
-        bg.x = parseFloat(this.model.background.getAttribute("data-x"));
-        bg.y = parseFloat(this.model.background.getAttribute("data-y"));
+        bg.x = +this.model.background.getAttribute("data-x");
+        bg.y = +this.model.background.getAttribute("data-y");
         bg.w = this.model.background.offsetWidth;
         bg.h = this.model.background.offsetHeight;
         // get the player position
         var pl = {}
-        pl.x = parseFloat(this.model.player.getAttribute("data-x"));
-        pl.y = parseFloat(this.model.player.getAttribute("data-y"));
+        pl.x = +this.model.player.getAttribute("data-x");
+        pl.y = +this.model.player.getAttribute("data-y");
         // move the map if the player is too close to the edge
         bg.x += (vp.w / 2 - pl.x - bg.x) / this.model.actuation;
         bg.y += (vp.h / 2 - pl.y - bg.y) / this.model.actuation;
@@ -47,6 +47,8 @@ export class Background {
         // translate the player's attributes into styles
         this.model.background.setAttribute("data-x", bg.x.toFixed(3));
         this.model.background.setAttribute("data-y", bg.y.toFixed(3));
+        this.model.background.setAttribute("data-col", parseInt(-bg.x / this.model.gridsize));
+        this.model.background.setAttribute("data-row", parseInt(-bg.y / this.model.gridsize));
         this.model.background.style.transform = `translate3d(${bg.x}px, ${bg.y}px, 0px)`;
     }
 }

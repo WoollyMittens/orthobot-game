@@ -4,7 +4,7 @@ import { Touchscreen } from "./touchscreen.js";
 
 export class Controls {
     constructor(model) {
-        // embrace the model
+        // expose the model
         this.model = model;
         // smoothing delay
         this.delay = null;

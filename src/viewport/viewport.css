@@ -1,0 +1,8 @@
+.ob-viewport {
+    width: 32rem;
+    height: 32rem;
+    overflow: hidden;
+    border: solid 1px #fff;
+    margin: 0 auto;
+    position: relative
+}

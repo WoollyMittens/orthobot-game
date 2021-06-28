@@ -1,3 +1,4 @@
+@import url("./viewport/viewport.css");
 @import url("./background/background.css");
 @import url("./bots/bots.css");
 @import url("./controls/controls.css");
@@ -28,13 +29,4 @@ body {
 
 a {
     color: #fff;
-}
-
-.ob-viewport {
-    width: 32rem;
-    height: 32rem;
-    overflow: hidden;
-    border: solid 1px #fff;
-    margin: 0 auto;
-    position: relative
 }

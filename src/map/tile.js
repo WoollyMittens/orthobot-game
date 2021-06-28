@@ -2,7 +2,7 @@ import { attributes } from "./attributes.js";
 
 export class Tile {
     constructor(model, char, index) {
-        // embrace the model
+        // expose the model
         this.model = model;
         // construct tile object
         this.element = this.add(char, index);
@@ -15,17 +15,17 @@ export class Tile {
         var tile = document.createElement("div");
         var col = index % this.model.colcount;
         var row = Math.floor(index / this.model.colcount);
-        this.x = col * this.model.gridsize;
-        this.y =  row * this.model.gridsize * this.model.foreshorten;
-        this.z = this.y + 1;
+        var x = col * this.model.gridsize;
+        var y =  row * this.model.gridsize * this.model.foreshorten;
+        var z = y + 1;
         // common properties
         tile.setAttribute("class", "ob-tile");
         tile.setAttribute("data-variant", char);
         tile.setAttribute("data-row", row);
         tile.setAttribute("data-col", col);
-        tile.setAttribute("data-x",  this.x);
-        tile.setAttribute("data-y", this.y);
-        tile.setAttribute("data-z", this.z);
+        tile.setAttribute("data-x", x);
+        tile.setAttribute("data-y", y);
+        tile.setAttribute("data-z", z);
         for (var key in attributes["common"]) {
             tile.setAttribute("data-" + key, attributes["common"][key]);
         }
@@ -34,7 +34,7 @@ export class Tile {
             tile.setAttribute("data-" + key, attributes[char][key]);
         }
         // constant styles
-        tile.style.transform = `translate3d(${this.x}px, ${this.y}px, ${this.z}px)`;
+        tile.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
         tile.style.width = this.model.gridsize + "px";
         tile.style.height = this.model.gridsize + "px";
         // add the tile to the background layer
@@ -51,27 +51,17 @@ export class Tile {
     }
 
     render = function () {
-        // check visibility
-        var bg = this.model.background;
-        var vp = this.model.viewport;
-        var grid = this.model.gridsize;
-        var bgx = parseFloat(bg.getAttribute("data-x"));
-        var bgy = parseFloat(bg.getAttribute("data-y"));
-        var tr = {
-            "top": this.y + bgy,
-            "right": this.x + grid + bgx,
-            "bottom": this.y + grid + bgy,
-            "left": this.x + bgx,
-        };
-        var vr = {
-            "top": 0,
-            "right": vp.offsetWidth,
-            "bottom": vp.offsetHeight,
-            "left": 0
-        };
+        // get the tile coordinates
+        var col = +this.element.getAttribute("data-col");
+        var row = +this.element.getAttribute("data-row");
+        // get the viewport limits
+        var vl = +this.model.background.getAttribute("data-col");
+        var vr = +this.model.viewport.getAttribute("data-cols") + vl;
+        var vt = +this.model.background.getAttribute("data-row");
+        var vb = +this.model.viewport.getAttribute("data-rows") + vt;
         // (un)render the tile
         Object.assign(this.element.style, {
-            display: (tr.bottom < vr.top || tr.left > vr.right || tr.top > vr.bottom || tr.right < vr.left) ? "none" : "block"
+            display: (row < vt || col > vr || row > vb || col < vl) ? "none" : "block"
         });
     }
 

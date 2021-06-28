@@ -1,6 +1,6 @@
 export class Projectiles {
     constructor(model) {
-        // embrace the model
+        // expose the model
         this.model = model;
     }
  

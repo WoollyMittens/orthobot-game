@@ -2,7 +2,7 @@ import { attributes } from "./attributes.js";
 
 export class Enemy {
     constructor(model, char, index) {
-        // embrace the model
+        // expose the model
         this.model = model;
         // construct tile object
         this.element = this.add(char, index);
@@ -14,15 +14,15 @@ export class Enemy {
         // create a tile object
         var count = index - this.model.bots.length;
         var bot = document.createElement("div");
-        var col = count % this.model.rowcount;
-        var row = Math.floor(count / this.model.rowcount);
+        this.col = count % this.model.rowcount;
+        this.row = Math.floor(count / this.model.rowcount);
         // common properties
         bot.setAttribute("class", "ob-bot");
         bot.setAttribute("data-variant", char);
-        bot.setAttribute("data-row", col);
-        bot.setAttribute("data-col", row);
-        bot.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
-        bot.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
+        bot.setAttribute("data-row", this.col);
+        bot.setAttribute("data-col", this.row);
+        bot.setAttribute("data-x", (this.col + 0.5) * this.model.gridsize);
+        bot.setAttribute("data-y", (this.row + 0.5) * this.model.gridsize * this.model.foreshorten);
         for (var key in attributes["common"]) {
             bot.setAttribute("data-" + key, attributes["common"][key]);
         }
@@ -39,11 +39,19 @@ export class Enemy {
     }
 
     render = function() {
-        // translate the player's attributes into styles
-        this.element.style.transform = `translate3d(
-            ${this.element.getAttribute("data-x")}px, 
-            ${this.element.getAttribute("data-y")}px, 
-            ${this.element.getAttribute("data-y")}px)`;
+        // get the viewport limits
+        var vl = +this.model.background.getAttribute("data-col") - 1;
+        var vr = +this.model.viewport.getAttribute("data-cols") + vl + 2;
+        var vt = +this.model.background.getAttribute("data-row") - 1;
+        var vb = +this.model.viewport.getAttribute("data-cols") + vt + 2;
+        // (un)render the tile
+        Object.assign(this.element.style, {
+            display: (this.row < vt || this.col > vr || this.row > vb || this.col < vl) ? "none" : "block",
+            transform: `translate3d(
+                ${this.element.getAttribute("data-x")}px, 
+                ${this.element.getAttribute("data-y")}px, 
+                ${this.element.getAttribute("data-y")}px)`
+        });
     }
  
     resolve = function (interval) {

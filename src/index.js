@@ -1,6 +1,7 @@
 "use strict";
 
 import { Storage } from "./storage/storage.js";
+import { Viewport } from "./viewport/viewport.js";
 import { Map } from "./map/map.js";
 import { Bots } from "./bots/bots.js";
 import { Player } from "./player/player.js";
@@ -11,7 +12,7 @@ import { Sounds } from "./sounds/sounds.js";
 
 class OrthoBot {
     constructor(model) {
-        // embrace the model
+        // expose the model
         this.model = model;
         // init the components
         this.init();
@@ -26,6 +27,7 @@ class OrthoBot {
     init() {
         // create the components
         this.storage = new Storage(this.model);
+        this.viewport = new Viewport(this.model);
         this.background = new Background(this.model);
         this.map = new Map(this.model);
         this.bots = new Bots(this.model);

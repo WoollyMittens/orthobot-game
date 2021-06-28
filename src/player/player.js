@@ -18,16 +18,16 @@ export class Player {
     get position() {
         var player = this.model.player;
         return {
-            "acceleration": parseInt(player.getAttribute("data-acceleration")),
+            "acceleration": +player.getAttribute("data-acceleration"),
             "direction": player.getAttribute("data-direction"),
-            "topspeed": parseInt(player.getAttribute("data-topspeed")),
-            "horizontal": parseFloat(player.getAttribute("data-horizontal")),
-            "vertical": parseFloat(player.getAttribute("data-vertical")),
+            "topspeed": +player.getAttribute("data-topspeed"),
+            "horizontal": +player.getAttribute("data-horizontal"),
+            "vertical": +player.getAttribute("data-vertical"),
             "radius": player.offsetWidth / 2,
-            "col": parseInt(player.getAttribute("data-col")),
-            "row": parseInt(player.getAttribute("data-row")),
-            "x": parseFloat(player.getAttribute("data-x")),
-            "y": parseFloat(player.getAttribute("data-y"))
+            "col": +player.getAttribute("data-col"),
+            "row": +player.getAttribute("data-row"),
+            "x": +player.getAttribute("data-x"),
+            "y": +player.getAttribute("data-y")
         }
     }
 
@@ -153,8 +153,8 @@ export class Player {
         // check for all bots
         this.model.bots.forEach(bot => {
             // get the bot coordinates
-            let x = parseInt(bot.getAttribute("data-x"));
-            let y = parseInt(bot.getAttribute("data-y"));
+            let x = +bot.getAttribute("data-x");
+            let y = +bot.getAttribute("data-y");
             let radius = bot.offsetWidth / 2;
             // check if the two intersect
             let above = next.y + next.radius < y - radius;

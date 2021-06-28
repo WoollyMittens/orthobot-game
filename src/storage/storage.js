@@ -11,7 +11,7 @@ export class Storage {
     }
 
     get colcount() {
-        return parseInt(this.hash.match(/[0-9]/g).join());
+        return +this.hash.match(/[0-9]/g).join();
     }
 
     get rowcount() {

@@ -1,8 +1,10 @@
 export class Sounds {
     constructor(model) {
-        // embrace the model
+        // expose the model
         this.model = model;
     }
  
-    update = function(interval) {}
+    update = function(interval) {
+        // look for player,enemies, or projectiles that make sound
+    }
 }
