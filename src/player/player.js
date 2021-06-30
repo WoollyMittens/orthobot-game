@@ -23,7 +23,7 @@ export class Player {
             "topspeed": +player.getAttribute("data-topspeed"),
             "horizontal": +player.getAttribute("data-horizontal"),
             "vertical": +player.getAttribute("data-vertical"),
-            "radius": player.offsetWidth / 2,
+            "radius": player.offsetWidth / 2 || this.model.gridsize / 2,
             "col": +player.getAttribute("data-col"),
             "row": +player.getAttribute("data-row"),
             "x": +player.getAttribute("data-x"),

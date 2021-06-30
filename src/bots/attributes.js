@@ -1,7 +1,6 @@
 export const attributes = {
     "common": {
-        "direction": "S",
-        "acceleration": 0,
+        "direction": "N",
         "horizontal": 0,
         "vertical": 0,
         "health": 9,
