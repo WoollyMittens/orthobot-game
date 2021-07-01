@@ -1,79 +1,97 @@
 "use strict";
 
-import { Storage } from "./storage/storage.js";
-import { Viewport } from "./viewport/viewport.js";
-import { Map } from "./map/map.js";
-import { Bots } from "./bots/bots.js";
-import { Player } from "./player/player.js";
-import { Projectiles } from "./projectiles/projectiles.js";
-import { Background } from "./background/background.js";
-import { Controls } from "./controls/controls.js";
-import { Sounds } from "./sounds/sounds.js";
+import {
+	Storage
+} from "./storage/storage.js";
+import {
+	Viewport
+} from "./viewport/viewport.js";
+import {
+	Map
+} from "./map/map.js";
+import {
+	Bots
+} from "./bots/bots.js";
+import {
+	Player
+} from "./player/player.js";
+import {
+	Projectiles
+} from "./projectiles/projectiles.js";
+import {
+	Background
+} from "./background/background.js";
+import {
+	Controls
+} from "./controls/controls.js";
+import {
+	Sounds
+} from "./sounds/sounds.js";
 
 class OrthoBot {
-    constructor(model) {
-        // expose the model
-        this.model = model;
-        // init the components
-        this.init();
-        // start the redraw loop
-        this.update();
-        // reset when the url hash changes
-        window.addEventListener("hashchange", this.reset.bind(this), false);
-        // report the status
-        console.log("model:", this.model);
-    }
+	constructor(model) {
+		// expose the model
+		this.model = model;
+		// init the components
+		this.init();
+		// start the redraw loop
+		this.update();
+		// reset when the url hash changes
+		window.addEventListener("hashchange", this.reset.bind(this), false);
+		// report the status
+		console.log("model:", this.model);
+	}
 
-    init() {
-        // create the components
-        this.storage = new Storage(this.model);
-        this.viewport = new Viewport(this.model);
-        this.background = new Background(this.model);
-        this.map = new Map(this.model);
-        this.bots = new Bots(this.model);
-        this.player = new Player(this.model);
-        this.projectiles = new Projectiles(this.model);
-        this.controls = new Controls(this.model);
-        this.sounds = new Sounds(this.model);
-        // start the timer
-        this.model.time = new Date().getTime();
-    }
+	init() {
+		// create the components
+		this.storage = new Storage(this.model);
+		this.viewport = new Viewport(this.model);
+		this.background = new Background(this.model);
+		this.map = new Map(this.model);
+		this.bots = new Bots(this.model);
+		this.player = new Player(this.model);
+		this.projectiles = new Projectiles(this.model);
+		this.controls = new Controls(this.model);
+		this.sounds = new Sounds(this.model);
+		// start the timer
+		this.model.time = new Date().getTime();
+	}
 
-    reset() {
-        // empty the root element
-        this.model.viewport.innerHTML = "";
-        // remove the controls
-        this.controls.end();
-        // restart from the beginning
-        this.init();
-    }
+	reset() {
+		// empty the root element
+		this.model.viewport.innerHTML = "";
+		// remove the controls
+		this.controls.end();
+		// restart from the beginning
+		this.init();
+	}
 
-    update() {
-        // update the timer
-        var time = new Date().getTime();
-        var interval = (time - this.model.time) / 1000;
-        this.model.time = time;
-        // update the components
-        this.background.update(interval);
-        this.map.update(interval);
-        this.bots.update(interval);
-        this.player.update(interval);
-        this.projectiles.update(interval);
-        this.sounds.update(interval);
-        // request the next redraw
-        window.requestAnimationFrame(this.update.bind(this));
-    }
+	update() {
+		// update the timer
+		var time = new Date().getTime();
+		var interval = (time - this.model.time) / 1000;
+		this.model.time = time;
+		// update the components
+		this.background.update(interval);
+		this.map.update(interval);
+		this.bots.update(interval);
+		this.player.update(interval);
+		this.projectiles.update(interval);
+		this.sounds.update(interval);
+		// request the next redraw
+		window.requestAnimationFrame(this.update.bind(this));
+	}
 };
 
-var orthoBot = new OrthoBot ({
-    // target element
-    viewport: document.querySelector(".ob-viewport"),
-    // size of the background tiles
-    gridsize: 128,
-    // actuation multiplier
-    actuation: 10,
-    // distort this much for isometric view
-    foreshorten: 0.75
+var orthoBot = new OrthoBot({
+	// target element
+	viewport: document.querySelector(".ob-viewport"),
+	// size of the background tiles
+	gridsize: 128,
+	// actuation multiplier
+	actuation: 10,
+	// distort this much for isometric view
+	foreshorten: 0.75
 });
 
 window.orthoBot = orthoBot;

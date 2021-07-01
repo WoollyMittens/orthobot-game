@@ -1,13 +1,13 @@
 .ob-player {
-    position: absolute;
-    z-index: 2;
+	position: absolute;
+	z-index: 2;
 }
 
 .ob-player[data-variant=""] {
-    background-color: Yellow;
-    width: 64px;
-    height: 64px;
-    margin: -32px 0 0 -32px;
+	background-color: Yellow;
+	width: 64px;
+	height: 64px;
+	margin: -32px 0 0 -32px;
 }
 
 .ob-player[data-direction="S"] {}

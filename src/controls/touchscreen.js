@@ -1,3 +1,3 @@
 export class Touchscreen {
-    constructor(vectors, update) {}
+	constructor(vectors, update) {}
 }

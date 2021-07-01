@@ -1,7 +1,7 @@
 .ob-background {
-    position: relative;
-    width: 128rem;
-    height: 128rem;
-    transform: translate3d(0, 0, 0);
-    transform-style: preserve-3d;
+	position: relative;
+	width: 128rem;
+	height: 128rem;
+	transform: translate3d(0, 0, 0);
+	transform-style: preserve-3d;
 }

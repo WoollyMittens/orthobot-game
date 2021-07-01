@@ -1,25 +1,25 @@
 .ob-bot {
-    position: absolute;
-    z-index: 2;
+	position: absolute;
+	z-index: 2;
 }
 
 .ob-bot[data-variant="a"] {
-    background-color: Red;
-    width: 64px;
-    height: 64px;
-    margin: -32px 0 0 -32px;
+	background-color: Red;
+	width: 64px;
+	height: 64px;
+	margin: -32px 0 0 -32px;
 }
 
 .ob-bot[data-variant="b"] {
-    background-color: Green;
-    width: 64px;
-    height: 64px;
-    margin: -32px 0 0 -32px;
+	background-color: Green;
+	width: 64px;
+	height: 64px;
+	margin: -32px 0 0 -32px;
 }
 
 .ob-bot[data-variant="c"] {
-    background-color: Blue;
-    width: 64px;
-    height: 64px;
-    margin: -32px 0 0 -32px;
+	background-color: Blue;
+	width: 64px;
+	height: 64px;
+	margin: -32px 0 0 -32px;
 }
