@@ -33,6 +33,9 @@ Open the index.html file in a browser via a localhost.
 * Tethered bots shoot at player, who is very vulnerable 
 * Damage is inflicted on a health pool with constant regen with an elemental advantage/disadvantage.
 * Tether is like arm in bionic commando. Or the inflator in dig dug
+* Cute version: frog in a bee suit
+* Unrender offscreen objects
+* Use webassembly for calculations
 
 ## Controllers
 

@@ -13,7 +13,7 @@ export const attributes = {
 		"weapon": 1,
 		"element": 1,
 		"topspeed": 128,
-		"patrol": "hunt",
+		"patrol": "counterclockwise",
 		"range": 4
 	},
 	"b": {
@@ -31,7 +31,7 @@ export const attributes = {
 		"weapon": 1,
 		"element": 3,
 		"topspeed": 64,
-		"patrol": "reverse",
+		"patrol": "roam",
 		// TODO: light cone value and distance
 		"range": 8
 	}

@@ -65,9 +65,9 @@ export class Player {
 	render = function () {
 		// translate the player's attributes into styles
 		this.element.style.transform = `translate3d(
-            ${this.element.getAttribute("data-x")}px, 
-            ${this.element.getAttribute("data-y")}px, 
-            ${this.element.getAttribute("data-y")}px)`;
+			${this.element.getAttribute("data-x")}px, 
+			${this.element.getAttribute("data-y")}px, 
+			${this.element.getAttribute("data-y")}px)`;
 	}
 
 	movement = function (current, interval) {
