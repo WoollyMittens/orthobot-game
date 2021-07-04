@@ -188,25 +188,21 @@ export class Bot {
 			// select the entered tile
 			var tile = this.scope.map.select(next.col, next.row)
 			// pick a way to deal with this tile
-			try {
-				switch (tile.type) {
-					case "alarm":
-					case "switch":
-					case "gap":
-					case "wall":
-						condition = false;
-						break;
-					case "gate":
-						condition = (this.elemental === tile.elemental);
-						break;
-					case "exit":
-					case "bridge":
-					case "door":
-						condition = (tile.value === "open");
-						break;
-				}
-			} catch(e) {
-				console.log(next, current, this.element);
+			switch (tile.type) {
+				case "alarm":
+				case "switch":
+				case "gap":
+				case "wall":
+					condition = false;
+					break;
+				case "gate":
+					condition = (this.elemental === tile.elemental);
+					break;
+				case "exit":
+				case "bridge":
+				case "door":
+					condition = (tile.value === "open");
+					break;
 			}
 		}
 		// or correct the movement

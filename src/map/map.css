@@ -1,21 +1,51 @@
 .ob-tile {
 	position: absolute;
-	opacity: 0.7;
 	z-index: 1;
 }
 
-[data-variant="A"] {
-	background-color: crimson;
+.ob-tile:before {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 25%;
+	right: 0;
+	bottom: 0;
 }
 
-[data-variant="B"] {
+.ob-tile:after {
+	content: "";
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 75%;
+	right: 0;
+	bottom: 0;
+}
+
+[data-variant="A"]:before {
+	background-color: crimson;
+	top: 0%;
+	bottom: 25%;
+}
+
+[data-variant="A"]:after {
+	display: block;
+	background-color: maroon;
+}
+
+[data-variant="B"]:before {
 	background-color: teal;
 }
 
-[data-variant="Y"] {
+[data-variant="C"]:before {
+	background-color: magenta;
+}
+
+[data-variant="Y"]:before {
 	background-color: orange;
 }
 
-[data-variant="Z"] {
+[data-variant="Z"]:before {
 	background-color: purple;
 }

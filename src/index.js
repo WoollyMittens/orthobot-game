@@ -4,6 +4,9 @@ import {
 	Storage
 } from "./storage/storage.js";
 import {
+	Interface
+} from "./interface/interface.js";
+import {
 	Viewport
 } from "./viewport/viewport.js";
 import {
@@ -46,6 +49,7 @@ class OrthoBot {
 		// create the components
 		this.storage = new Storage(this);
 		this.viewport = new Viewport(this);
+		this.interface = new Interface(this);
 		this.background = new Background(this);
 		this.map = new Map(this);
 		this.bots = new Bots(this);
@@ -69,8 +73,9 @@ class OrthoBot {
 	update() {
 		// update the timer
 		var time = new Date().getTime();
-		var interval = (time - this.time) / 1000;
+		var interval = Math.max(Math.min((time - this.time), 20), 1) / 1000;
 		this.time = time;
+		this.interface.log(parseInt(1/interval) + "fps");
 		// update the components
 		this.viewport.update();
 		this.background.update();
