@@ -8,10 +8,11 @@ export const attributes = {
 		"colliding": ""
 	},
 	"a": {
+		"direction": "S",
 		"regen": 3,
 		"armor": 1,
 		"weapon": 1,
-		"element": 1,
+		"elemental": 1,
 		"topspeed": 128,
 		"patrol": "counterclockwise",
 		"range": 4
@@ -20,7 +21,7 @@ export const attributes = {
 		"regen": 2,
 		"armor": 2,
 		"weapon": 1,
-		"element": 2,
+		"elemental": 2,
 		"topspeed": 96,
 		"patrol": "clockwise",
 		"range": 6
@@ -29,7 +30,7 @@ export const attributes = {
 		"regen": 1,
 		"armor": 3,
 		"weapon": 1,
-		"element": 3,
+		"elemental": 3,
 		"topspeed": 64,
 		"patrol": "roam",
 		// TODO: light cone value and distance

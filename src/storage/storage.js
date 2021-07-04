@@ -1,9 +1,9 @@
 export class Storage {
-	constructor(model) {
+	constructor(scope) {
 		// extend the model
-		model.hash = this.hash;
-		model.colcount = this.colcount;
-		model.rowcount = this.rowcount;
+		scope.model.hash = this.hash;
+		scope.model.colcount = this.colcount;
+		scope.model.rowcount = this.rowcount;
 	}
 
 	get hash() {

@@ -1,16 +1,45 @@
 export class Viewport {
-	constructor(model) {
+	constructor(scope) {
 		// expose the model
-		this.model = model;
-		// update the viewport
-		this.update(0);
+		this.model = scope.model;
+		this.element = document.querySelector(scope.model.container);
 	}
 
-	update = function (interval) {
+	get cols() {
+		return +this.element.getAttribute("data-cols");
+	}
+
+	set cols(value) {
+		this.element.setAttribute("data-cols", Math.ceil(value));
+	}
+
+	get rows() {
+		return +this.element.getAttribute("data-rows");
+	}
+
+	set rows(value) {
+		this.element.setAttribute("data-rows", Math.ceil(value));
+	}
+
+	get width() {
+		return this.element.offsetWidth;
+	}
+
+	set width(value) {
+		this.element.style.width = `${value}px`;
+	}
+
+	get height() {
+		return this.element.offsetHeight;
+	}
+
+	set height(value) {
+		this.element.style.height = `${value}px`;
+	}
+
+	update = function () {
 		// measure the viewport limits
-		var cols = this.model.viewport.offsetWidth / this.model.gridsize;
-		var rows = this.model.viewport.offsetHeight / this.model.gridsize / this.model.foreshorten;
-		this.model.viewport.setAttribute("data-cols", Math.ceil(cols));
-		this.model.viewport.setAttribute("data-rows", Math.ceil(rows));
+		this.cols = this.element.offsetWidth / this.model.gridsize;
+		this.rows = this.element.offsetHeight / this.model.gridsize / this.model.foreshorten;
 	}
 }

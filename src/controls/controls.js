@@ -9,13 +9,13 @@ import {
 } from "./touchscreen.js";
 
 export class Controls {
-	constructor(model) {
-		// expose the model
-		this.model = model;
+	constructor(scope) {
+		// expose the scope
+		this.scope = scope;
 		// smoothing delay
 		this.delay = null;
 		// accelerating force
-		this.acceleration = this.model.gridsize * this.model.actuation;
+		this.acceleration = scope.model.gridsize * scope.model.actuation;
 		// input vectors
 		this.vectors = {
 			north: false,
@@ -51,11 +51,11 @@ export class Controls {
 				} else if (this.vectors.west) {
 					directions.push("W")
 				}
-				this.model.player.setAttribute("data-direction", directions.join(""));
-				this.model.player.setAttribute("data-acceleration", this.acceleration);
+				this.scope.player.direction = directions.join("");
+				this.scope.player.acceleration = this.acceleration;
 			} else {
 				// or halt the motion
-				this.model.player.setAttribute("data-acceleration", "0");
+				this.scope.player.acceleration = 0;
 			}
 			// register the primary input
 			// register the secondary input

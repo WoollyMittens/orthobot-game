@@ -30,36 +30,36 @@ import {
 
 class OrthoBot {
 	constructor(model) {
-		// expose the model
+		// establish the model
 		this.model = model;
+		// store the time stamp
+		this.time = new Date().getTime();
 		// init the components
 		this.init();
 		// start the redraw loop
 		this.update();
 		// reset when the url hash changes
 		window.addEventListener("hashchange", this.reset.bind(this), false);
-		// report the status
-		console.log("model:", this.model);
 	}
 
 	init() {
 		// create the components
-		this.storage = new Storage(this.model);
-		this.viewport = new Viewport(this.model);
-		this.background = new Background(this.model);
-		this.map = new Map(this.model);
-		this.bots = new Bots(this.model);
-		this.player = new Player(this.model);
-		this.projectiles = new Projectiles(this.model);
-		this.controls = new Controls(this.model);
-		this.sounds = new Sounds(this.model);
+		this.storage = new Storage(this);
+		this.viewport = new Viewport(this);
+		this.background = new Background(this);
+		this.map = new Map(this);
+		this.bots = new Bots(this);
+		this.player = new Player(this);
+		this.projectiles = new Projectiles(this);
+		this.controls = new Controls(this);
+		this.sounds = new Sounds(this);
 		// start the timer
 		this.model.time = new Date().getTime();
 	}
 
 	reset() {
 		// empty the root element
-		this.model.viewport.innerHTML = "";
+		this.viewport.element.innerHTML = "";
 		// remove the controls
 		this.controls.end();
 		// restart from the beginning
@@ -69,10 +69,11 @@ class OrthoBot {
 	update() {
 		// update the timer
 		var time = new Date().getTime();
-		var interval = (time - this.model.time) / 1000;
-		this.model.time = time;
+		var interval = (time - this.time) / 1000;
+		this.time = time;
 		// update the components
-		this.background.update(interval);
+		this.viewport.update();
+		this.background.update();
 		this.map.update(interval);
 		this.bots.update(interval);
 		this.player.update(interval);
@@ -85,7 +86,7 @@ class OrthoBot {
 
 var orthoBot = new OrthoBot({
 	// target element
-	viewport: document.querySelector(".ob-viewport"),
+	container: ".ob-viewport",
 	// size of the background tiles
 	gridsize: 128,
 	// actuation multiplier

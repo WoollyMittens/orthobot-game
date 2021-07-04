@@ -16,7 +16,7 @@ export const attributes = {
 	// gate
 	"C": {
 		"type": "gate",
-		"element": "1"
+		"elemental": 1
 	},
 	// door
 	"D": {
