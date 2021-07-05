@@ -14,8 +14,10 @@ export class Bot {
 		var count = index - collection.length;
 		this.col = count % this.model.rowcount;
 		this.row = Math.floor(count / this.model.rowcount);
-		this.x = (this.col + 0.5) * this.model.gridsize;
-		this.y = (this.row + 0.5) * this.model.gridsize * this.model.foreshorten;
+		this.subcol = this.col + 0.5;
+		this.subrow = this.row + 0.5;
+		this.x = this.subcol * this.model.gridsize;
+		this.y = this.subrow * this.model.gridsize * this.model.foreshorten;
 		this.acceleration = this.model.gridsize * this.model.actuation;
 		// common properties
 		for (var key in attributes["common"]) {
@@ -104,6 +106,8 @@ export class Bot {
 			"horizontal": this.horizontal,
 			"vertical": this.vertical,
 			"radius": this.radius,
+			"subrow": this.subrow,
+			"subcol": this.subcol,
 			"col": this.col,
 			"row": this.row,
 			"x": this.x,
@@ -118,6 +122,8 @@ export class Bot {
 		this.patrol = data.patrol;
 		this.horizontal = data.horizontal;
 		this.vertical = data.vertical;
+		this.subcol = data.subcol;
+		this.subrow = data.subrow;
 		this.col = data.col;
 		this.row = data.row;
 		this.x = data.x;
@@ -148,33 +154,39 @@ export class Bot {
 		next.horizontal = current.horizontal / (1 + interval * this.model.actuation);
 		next.vertical = current.vertical / (1 + interval * this.model.actuation);
 		// apply the acceleration
+		var driftx = 0, drifty = 0, drivex = 0, drivey = 0;
 		if (/E/.test(current.direction)) {
-			next.horizontal = Math.min(
-				next.horizontal + current.acceleration * interval,
-				patrolspeed
-			)
+			// in the direction of travel
+			drivex = current.acceleration * interval;
+			// towards the centre of the row
+			// TODO: use the unrounded col/row values if possible
+			drifty = (0.5 - current.subrow % 1) * current.acceleration * interval;
 		} else if (/W/.test(current.direction)) {
-			next.horizontal = Math.max(
-				next.horizontal - current.acceleration * interval,
-				-patrolspeed
-			)
+			// in the direction of travel
+			drivex = -current.acceleration * interval;
+			// towards the centre of the row
+			drifty = (0.5 - current.subrow % 1) * current.acceleration * interval;
 		}
 		if (/S/.test(current.direction)) {
-			next.vertical = Math.min(
-				next.vertical + current.acceleration * interval,
-				patrolspeed
-			)
+			// in the direction of travel
+			drivey = current.acceleration * interval;
+			// towards the centre of the col
+			driftx = (0.5 - current.subcol % 1) * current.acceleration * interval;
 		} else if (/N/.test(current.direction)) {
-			next.vertical = Math.max(
-				next.vertical - current.acceleration * interval,
-				-patrolspeed
-			)
+			// in the direction of travel
+			drivey = -current.acceleration * interval;
+			// towards the centre of the col
+			driftx = (0.5 - current.subcol % 1) * current.acceleration * interval;
 		}
-		// calculate the new position
+		next.horizontal = Math.max(Math.min(next.horizontal + drivex + driftx, patrolspeed), -patrolspeed);
+		next.vertical = Math.max(Math.min(next.vertical + drivey + drifty, patrolspeed), -patrolspeed);
+		// calculate the new positiondw
 		next.x = current.x + next.horizontal * interval;
 		next.y = current.y + next.vertical * interval;
-		next.col = parseInt((next.x + Math.sign(next.horizontal) * current.radius) / this.model.gridsize);
-		next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
+		next.subcol = next.x / this.model.gridsize;
+		next.subrow = next.y / this.model.gridsize / this.model.foreshorten;
+		next.col = parseInt(next.subcol + Math.sign(next.horizontal) * current.radius / this.model.gridsize);
+		next.row = parseInt(next.subrow);
 		// return the applied movement
 		return next;
 	}
@@ -264,13 +276,18 @@ export class Bot {
 
 	navigation = function (current, next) {
 		// handle tile changes
+		//	if the bot reaches the ~centre of a tile
+		//		roam, leftwall, rightwall - decide on a new direction
+		//		hunt - check for line of sight to player and adjust direction / shooting
 		// resolve any collision
 		if (next.colliding) {
 			switch (next.patrol) {
 				case "clockwise":
+					// TODO: will get stuck on diagonals
 					next.direction = this.directions[(this.directions.indexOf(current.direction) + 2 + this.directions.length) % this.directions.length];
 					break;
 				case "counterclockwise":
+					// TODO: will get stuck on diagonals
 					next.direction = this.directions[(this.directions.indexOf(current.direction) - 2 + this.directions.length) % this.directions.length];
 					break;
 				case "reverse":

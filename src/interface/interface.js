@@ -7,6 +7,6 @@ export class Interface {
 	}
 
 	log(msg) {
-		this.element.innerHTML = msg;
+		this.element.innerHTML = msg.join("\n");
 	}
 }
