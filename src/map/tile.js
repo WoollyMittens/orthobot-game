@@ -3,7 +3,7 @@ import {
 } from "./attributes.js";
 
 export class Tile {
-	constructor(scope, char, index) {
+	constructor(scope, matrix, char, index) {
 		// expose the model
 		this.scope = scope;
 		// create the tile objects
@@ -34,6 +34,8 @@ export class Tile {
 		});
 		// add the tile to the background layer
 		scope.background.element.appendChild(this.element);
+		// store this tile in a lookup matrix
+		matrix[row][col] = this;
 	}
 
 	get variant() {
@@ -70,6 +72,7 @@ export class Tile {
 
 	resolve = function (interval) {
 		// reduce the illumination level by one
+		if (this.light > 0) this.light -= 1;
 		// check if any conditions have been met
 	}
 

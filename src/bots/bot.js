@@ -30,8 +30,6 @@ export class Bot {
 		}
 		// add the bot to the map
 		scope.background.element.appendChild(this.element);
-		// directions lookup
-		this.directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 	}
 
 	get variant() {
@@ -147,7 +145,7 @@ export class Bot {
 	}
 
 	movement = function (current, interval) {
-		var next = {...current};
+		var next = { ...current };
 		// pick the patrol speed
 		var patrolspeed = (/hunt|flee/.test(current.patrol)) ? current.topspeed : current.topspeed / 2;
 		// apply the deceleration
@@ -159,7 +157,6 @@ export class Bot {
 			// in the direction of travel
 			drivex = current.acceleration * interval;
 			// towards the centre of the row
-			// TODO: use the unrounded col/row values if possible
 			drifty = (0.5 - current.subrow % 1) * current.acceleration * interval;
 		} else if (/W/.test(current.direction)) {
 			// in the direction of travel
@@ -195,32 +192,13 @@ export class Bot {
 		// correct the movement for map collisions
 		var colchange = (next.col !== current.col);
 		var rowchange = (next.row !== current.row);
-		var condition = true;
-		if (colchange || rowchange) {
-			// select the entered tile
-			var tile = this.scope.map.select(next.col, next.row)
-			// pick a way to deal with this tile
-			switch (tile.type) {
-				case "alarm":
-				case "switch":
-				case "gap":
-				case "wall":
-					condition = false;
-					break;
-				case "gate":
-					condition = (this.elemental === tile.elemental);
-					break;
-				case "exit":
-				case "bridge":
-				case "door":
-					condition = (tile.value === "open");
-					break;
-			}
-		}
-		// or correct the movement
-		if (!condition) {
+		// if a new tile has been entered, check if this tile can be traversed
+		if (
+			(colchange || rowchange) &&
+			!this.scope.map.passage(next.col, next.row, this)
+		) {
 			// note the collision
-			next.colliding = "wall";
+			next.colliding = "scenery";
 			// don't allow getting closer
 			if (colchange) {
 				// halt the movement
@@ -241,7 +219,7 @@ export class Bot {
 		// gather all entities
 		var entities = [this.scope.player, ...this.scope.bots.collection];
 		// check for all bots
-		for(let entity of entities) {
+		for (let entity of entities) {
 			// skip unloaded player and self
 			if (entity?.element !== this.element) {
 				// get the bot coordinates
@@ -275,46 +253,59 @@ export class Bot {
 	}
 
 	navigation = function (current, next) {
-		// handle tile changes
-		//	if the bot reaches the ~centre of a tile
-		//		roam, leftwall, rightwall - decide on a new direction
-		//		hunt - check for line of sight to player and adjust direction / shooting
 		// resolve any collision
-		if (next.colliding) {
+		if (/bot|scenery/.test(next.colliding)) {
 			switch (next.patrol) {
 				case "clockwise":
-					// TODO: will get stuck on diagonals
-					next.direction = this.directions[(this.directions.indexOf(current.direction) + 2 + this.directions.length) % this.directions.length];
+					if (/N/.test(current.direction)) { next.direction = "E"; }
+					else if (/S/.test(current.direction)) { next.direction = "W"; }
+					if (/W/.test(current.direction)) { next.direction = "N"; }
+					else if (/E/.test(current.direction)) { next.direction = "S"; }
 					break;
 				case "counterclockwise":
-					// TODO: will get stuck on diagonals
-					next.direction = this.directions[(this.directions.indexOf(current.direction) - 2 + this.directions.length) % this.directions.length];
+					if (/N/.test(current.direction)) { next.direction = "W"; }
+					else if (/S/.test(current.direction)) { next.direction = "E"; }
+					if (/W/.test(current.direction)) { next.direction = "S"; }
+					else if (/E/.test(current.direction)) { next.direction = "N"; }
 					break;
 				case "reverse":
-					next.direction = this.directions[(this.directions.indexOf(current.direction) + 4 + this.directions.length) % this.directions.length];
+					if (/N/.test(current.direction)) { next.direction = "S"; }
+					else if (/S/.test(current.direction)) { next.direction = "N"; }
+					if (/W/.test(current.direction)) { next.direction = "E"; }
+					else if (/E/.test(current.direction)) { next.direction = "W"; }
 					break;
 				case "roam":
-					next.direction = this.directions[parseInt(Math.random() * 8 - 0.5 + this.directions.length) % this.directions.length];
-					break;
-				case "hunt":
-					// TODO: the direction is towards the player
-					break;
-				case "flee":
-					// TODO: the direction is away from the player
+					let directions = ["N", "E", "S", "W"];
+					next.direction = directions[parseInt(Math.random() * directions.length)];
 					break;
 			}
 			// resolve the collision
 			next.colliding = "";
 		}
+		// if in hunt mode check for line of sight to player and adjust direction / shooting
 		// scan ahead to the configured distance
-			// if player in way, request projectile
-			// increase the light levels
+		var addcol = 0, addrow = 0;
+		if (/N/.test(this.direction)) { addrow = -1; 	}
+		else if (/S/.test(this.direction)) { addrow = 1 }
+		if (/W/.test(this.direction)) { addcol = -1; }
+		else if (/E/.test(this.direction)) { addcol = 1; }
+		for (let a = 0, b = this.range; a < b; a += 1) {
+			let col = this.col + a * addcol;
+			let row = this.row + a * addrow;
+			// don't scan off the map or through walls
+			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
+			if (!this.scope.map.passage(col, row, this)) break;
+			// increase the light levels along the way
+			let tile = this.scope.map.select(col, row);
+			tile.light = this.range - a;
+			// if player in way, change to hunt mode and request projectile
+		}
 	}
 
 	resolve = function (interval) {
 		// fetch the current position
 		var current = this.position;
-		
+
 		// calculate the new position
 		var next = this.movement(current, interval);
 

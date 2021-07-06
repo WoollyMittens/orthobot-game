@@ -75,7 +75,7 @@ class OrthoBot {
 		var time = new Date().getTime();
 		var interval = Math.max(Math.min((time - this.time), 20), 1) / 1000;
 		this.time = time;
-		this.interface.log([parseInt(1/interval) + "fps"]);
+		this.interface.log = parseInt(1/interval) + "fps";
 		// update the components
 		this.viewport.update();
 		this.background.update();

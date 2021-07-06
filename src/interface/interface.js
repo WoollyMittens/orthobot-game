@@ -6,7 +6,11 @@ export class Interface {
     scope.viewport.element.appendChild(this.element);
 	}
 
-	log(msg) {
-		this.element.innerHTML = msg.join("\n");
+	get log() {
+		return this.element.innerHTML;
+	}
+
+	set log(value) {
+		this.element.innerHTML = (Array.isArray(value)) ? value.join("\n") : value;
 	}
 }

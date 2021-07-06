@@ -5,14 +5,29 @@ import {
 export class Map {
 	constructor(scope) {
 		// construct tile objects out of the upper case tile codes
-		this.collection = scope.model.hash.match(/[A-Z]/g).map((char, index) => new Tile(scope, char, index));
+		this.matrix = new Array(scope.model.rowcount).fill(null).map(() => new Array(scope.model.colcount).fill(null));
+		this.collection = scope.model.hash.match(/[A-Z]/g).map((char, index) => new Tile(scope, this.matrix, char, index));
 	}
 
 	select = function (col, row) {
-		for(let tile of this.collection) {
-			if (tile.col === col && tile.row === row) return tile;
+		return this.matrix[row][col];
+	}
+
+	passage = function (col, row, entity) {
+		// select the tile from the collection
+		const tile = this.select(col, row);
+		// decide if the entity meets the conditions
+		switch (tile.type) {
+			case "alarm":
+			case "switch":
+			case "gap":
+			case "wall": return false;
+			case "gate": return (tile.elemental === entity.elemental);
+			case "exit":
+			case "bridge":
+			case "door": return (tile.value === "open");
+			default: return true;
 		}
-		return null;
 	}
 
 	update = function (interval) {

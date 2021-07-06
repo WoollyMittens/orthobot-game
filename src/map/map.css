@@ -3,49 +3,78 @@
 	z-index: 1;
 }
 
+/* effects layers */
+
 .ob-tile:before {
 	content: "";
-	display: block;
+	display: none;
 	position: absolute;
 	left: 0;
-	top: 25%;
+	top: 0;
 	right: 0;
 	bottom: 0;
 }
 
 .ob-tile:after {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, #000 25%, #000 100%);
 	content: "";
-	display: none;
+	display: block;
 	position: absolute;
 	left: 0;
-	top: 75%;
+	top: 0;
 	right: 0;
 	bottom: 0;
 }
 
-[data-variant="A"]:before {
-	background-color: crimson;
-	top: 0%;
-	bottom: 25%;
+[data-light^="0"]:after { opacity: 0.45; }
+[data-light^="1"]:after { opacity: 0.40; }
+[data-light^="2"]:after { opacity: 0.35; }
+[data-light^="3"]:after { opacity: 0.30; }
+[data-light^="4"]:after { opacity: 0.25; }
+[data-light^="5"]:after { opacity: 0.20; }
+[data-light^="6"]:after { opacity: 0.15; }
+[data-light^="7"]:after { opacity: 0.10; }
+[data-light^="8"]:after { opacity: 0.05; }
+[data-light^="9"]:after { opacity: 0.00; }
+
+/* walls */
+
+[data-variant="A"] {
+	background-image: linear-gradient(180deg, crimson 0%, crimson 50%, maroon 50%, maroon 100%);
 }
 
 [data-variant="A"]:after {
-	display: block;
-	background-color: maroon;
+	background-color: #000;
 }
 
-[data-variant="B"]:before {
-	background-color: teal;
+[data-variant="B"] {
+	background-color: Crimson;
 }
 
-[data-variant="C"]:before {
-	background-color: magenta;
+[data-variant="B"]:after {
+	background-color: #000;
 }
 
-[data-variant="Y"]:before {
-	background-color: orange;
+/* floor */
+
+[data-variant="C"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, teal 25%, teal 100%);
 }
 
-[data-variant="Z"]:before {
-	background-color: purple;
+/* gate */
+
+[data-variant="D"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, magenta 25%, magenta 100%);
+}
+
+/* entrance */
+
+[data-variant="Y"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, orange 25%, orange 100%);
+}
+
+/* exit */
+
+[data-variant="Z"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, purple 25%, purple 100%);
 }
