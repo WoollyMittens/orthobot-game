@@ -3,67 +3,88 @@ import {
 } from "./attributes.js";
 
 export class Tile {
-	constructor(model, char, index) {
+	constructor(scope, matrix, char, index) {
 		// expose the model
-		this.model = model;
-		// construct tile object
-		this.element = this.add(char, index);
-		// render the tile
-		this.update(0);
-	}
-
-	add = function (char, index) {
-		// create a tile object
-		var tile = document.createElement("div");
-		var col = index % this.model.colcount;
-		var row = Math.floor(index / this.model.colcount);
-		var x = col * this.model.gridsize;
-		var y = row * this.model.gridsize * this.model.foreshorten;
-		var z = y + 1;
+		this.scope = scope;
+		// create the tile objects
+		this.element = document.createElement("div");
+		this.element.className = "ob-tile";
+		// calculate the tile position
+		var col = index % scope.model.colcount;
+		var row = Math.floor(index / scope.model.colcount);
+		this.col = col;
+		this.row = row;
+		this.x = col * scope.model.gridsize;
+		this.y = row * scope.model.gridsize * scope.model.foreshorten;
+		this.z = this.y + 1;
 		// common properties
-		tile.setAttribute("class", "ob-tile");
-		tile.setAttribute("data-variant", char);
-		tile.setAttribute("data-row", row);
-		tile.setAttribute("data-col", col);
-		tile.setAttribute("data-x", x);
-		tile.setAttribute("data-y", y);
-		tile.setAttribute("data-z", z);
 		for (var key in attributes["common"]) {
-			tile.setAttribute("data-" + key, attributes["common"][key]);
+			this[key] = attributes["common"][key];
 		}
 		// specific properties
+		this.variant = char;
 		for (var key in attributes[char]) {
-			tile.setAttribute("data-" + key, attributes[char][key]);
+			this[key] = attributes[char][key];
 		}
 		// constant styles
-		tile.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
-		tile.style.width = this.model.gridsize + "px";
-		tile.style.height = this.model.gridsize + "px";
+		Object.assign(this.element.style, {
+			transform: `translate3d(${this.x}px, ${this.y}px, ${this.z}px)`,
+			width: `${scope.model.gridsize}px`,
+			height: `${scope.model.gridsize}px`
+		});
 		// add the tile to the background layer
-		this.model.background.appendChild(tile);
-		// add the tile to the model
-		this.model.map.push(tile);
-		// return the created element
-		return tile;
+		scope.background.element.appendChild(this.element);
+		// store this tile in a lookup matrix
+		matrix[row][col] = this;
+	}
+
+	get variant() {
+		return this.element.getAttribute("data-variant");
+	}
+
+	set variant(value) {
+		this.element.setAttribute("data-variant", value);
+	}
+
+	get col() {
+		return +this.element.getAttribute("data-col");
+	}
+
+	set col(value) {
+		this.element.setAttribute("data-col", value);
+	}
+
+	get row() {
+		return +this.element.getAttribute("data-row");
+	}
+
+	set row(value) {
+		this.element.setAttribute("data-row", value);
+	}
+
+	get light() {
+		return +this.element.getAttribute("data-light");
+	}
+
+	set light(value) {
+		this.element.setAttribute("data-light", value);
 	}
 
 	resolve = function (interval) {
 		// reduce the illumination level by one
+		if (this.light > 0) this.light -= 1;
 		// check if any conditions have been met
 	}
 
 	render = function () {
-		// get the tile coordinates
-		var col = +this.element.getAttribute("data-col");
-		var row = +this.element.getAttribute("data-row");
 		// get the viewport limits
-		var vl = +this.model.background.getAttribute("data-col");
-		var vr = +this.model.viewport.getAttribute("data-cols") + vl;
-		var vt = +this.model.background.getAttribute("data-row");
-		var vb = +this.model.viewport.getAttribute("data-rows") + vt;
+		var vl = this.scope.background.col;
+		var vr = this.scope.viewport.cols + vl;
+		var vt = this.scope.background.row;
+		var vb = this.scope.viewport.rows + vt;
 		// (un)render the tile
 		Object.assign(this.element.style, {
-			display: (row < vt || col > vr || row > vb || col < vl) ? "none" : "block"
+			display: (this.row < vt || this.col > vr || this.row > vb || this.col < vl) ? "none" : "block"
 		});
 	}
 

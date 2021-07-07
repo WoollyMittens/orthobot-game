@@ -1,7 +1,7 @@
 export class Sounds {
-	constructor(model) {
-		// expose the model
-		this.model = model;
+	constructor(scope) {
+		// expose the scope
+		this.scope = scope;
 	}
 
 	update = function (interval) {

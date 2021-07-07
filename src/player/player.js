@@ -3,75 +3,129 @@ import {
 } from "./attributes.js";
 
 export class Player {
-	constructor(model) {
-		// extend the model
-		this.model = model;
-		this.model.player = null;
+	constructor(scope) {
+		// expose the model
+		this.scope = scope;
+		this.model = scope.model;
 		// find the start position
-		var index = model.hash.match(/[A-Z]/g).indexOf("Y");
-		var col = index % model.rowcount;
-		var row = Math.floor(index / model.rowcount);
-		// create the player at the start position
-		this.element = this.add(col, row);
-		// render the player
-		this.update(0);
+		var index = this.model.hash.match(/[A-Z]/g).indexOf("Y");
+		var col = index % this.model.rowcount;
+		var row = Math.floor(index / this.model.rowcount);
+		// construct player entity at the entrance tile
+		this.element = document.createElement('div');
+		this.element.className = "ob-player";
+		this.col = col;
+		this.row = row;
+		this.x = (col + 0.5) * this.model.gridsize;
+		this.y = (row + 0.5) * this.model.gridsize * this.model.foreshorten;
+		for (var key in attributes["common"]) {
+			this[key] = attributes["common"][key];
+		}
+		// add the player to the background
+		scope.background.element.appendChild(this.element);
+	}
+
+	get variant() {
+		return this.element.getAttribute("data-variant");
+	}
+
+	set variant(value) {
+		this.element.setAttribute("data-variant", value);
+	}
+
+	get acceleration() {
+		return +this.element.getAttribute("data-acceleration");
+	}
+
+	set acceleration(value) {
+		this.element.setAttribute("data-acceleration", value);
+	}
+
+	get direction() {
+		return this.element.getAttribute("data-direction");
+	}
+
+	set direction(value) {
+		this.element.setAttribute("data-direction", value);
+	}
+
+	get reeling() {
+		return +this.element.getAttribute("data-reeling");
+	}
+
+	set reeling(value) {
+		this.element.setAttribute("data-reeling", value);
+	}
+
+	get shooting() {
+		return +this.element.getAttribute("data-shooting");
+	}
+
+	set shooting(value) {
+		this.element.setAttribute("data-shooting", value);
+	}
+
+	get radius() {
+		return this.element.offsetWidth / 2 || this.model.gridsize / 2;
+	}
+
+	set radius(value) {
+		Object.assign(this.element.style, {
+			width: `${value * 2}px`,
+			height: `${value * 2}px`,
+			margin: `-${value}px 0 0 -${value}px`
+		});
+	}
+
+	get col() {
+		return +this.element.getAttribute("data-col");
+	}
+
+	set col(value) {
+		this.element.setAttribute("data-col", value)
+	}
+
+	get row() {
+		return +this.element.getAttribute("data-row");
+	}
+
+	set row(value) {
+		this.element.setAttribute("data-row", value)
 	}
 
 	get position() {
-		var player = this.model.player;
+		// return all positional data as one object
 		return {
-			"acceleration": +player.getAttribute("data-acceleration"),
-			"direction": player.getAttribute("data-direction"),
-			"topspeed": +player.getAttribute("data-topspeed"),
-			"horizontal": +player.getAttribute("data-horizontal"),
-			"vertical": +player.getAttribute("data-vertical"),
-			"radius": player.offsetWidth / 2 || this.model.gridsize / 2,
-			"col": +player.getAttribute("data-col"),
-			"row": +player.getAttribute("data-row"),
-			"x": +player.getAttribute("data-x"),
-			"y": +player.getAttribute("data-y")
+			"acceleration": this.acceleration,
+			"direction": this.direction,
+			"topspeed": this.topspeed,
+			"horizontal": this.horizontal,
+			"vertical": this.vertical,
+			"radius": this.radius,
+			"col": this.col,
+			"row": this.row,
+			"x": this.x,
+			"y": this.y
 		}
 	}
 
 	set position(data) {
-		var player = this.model.player;
-		player.setAttribute("data-horizontal", data.horizontal.toFixed(3));
-		player.setAttribute("data-vertical", data.vertical.toFixed(3));
-		player.setAttribute("data-col", data.col);
-		player.setAttribute("data-row", data.row);
-		player.setAttribute("data-x", data.x.toFixed(3));
-		player.setAttribute("data-y", data.y.toFixed(3));
-	}
-
-	add = function (col, row) {
-		// construct player entity at the entrance tile
-		var player = document.createElement('div');
-		player.setAttribute("class", "ob-player");
-		player.setAttribute("data-row", col);
-		player.setAttribute("data-col", row);
-		player.setAttribute("data-x", (col + 0.5) * this.model.gridsize);
-		player.setAttribute("data-y", (row + 0.5) * this.model.gridsize * this.model.foreshorten);
-		for (var key in attributes["common"]) {
-			player.setAttribute("data-" + key, attributes["common"][key]);
-		}
-		// add the player to the background
-		this.model.background.appendChild(player);
-		// add the player to the model
-		this.model.player = player;
-		// return the created element
-		return player;
+		// update only mutable properties
+		this.horizontal = data.horizontal;
+		this.vertical = data.vertical;
+		this.col = data.col;
+		this.row = data.row;
+		this.x = data.x;
+		this.y = data.y;
 	}
 
 	render = function () {
 		// translate the player's attributes into styles
-		this.element.style.transform = `translate3d(
-			${this.element.getAttribute("data-x")}px, 
-			${this.element.getAttribute("data-y")}px, 
-			${this.element.getAttribute("data-y")}px)`;
+		this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, ${this.y}px)`;
 	}
 
 	movement = function (current, interval) {
-		var next = {};
+		var next = {...current};
 		// apply the deceleration
 		next.horizontal = current.horizontal / (1 + interval * this.model.actuation);
 		next.vertical = current.vertical / (1 + interval * this.model.actuation);
@@ -103,21 +157,20 @@ export class Player {
 		next.y = current.y + next.vertical * interval;
 		next.col = parseInt((next.x + Math.sign(next.horizontal) * current.radius) / this.model.gridsize);
 		next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
-		next.radius = current.radius;
 		// return the applied movement
 		return next;
 	}
 
 	environment = function (current, next) {
 		// correct the movement for map collisions
-		var colchange = (next.col !== current.col);
-		var rowchange = (next.row !== current.row);
+		const colchange = (next.col !== current.col);
+		const rowchange = (next.row !== current.row);
 		var condition = true;
 		if (colchange || rowchange) {
-			var tile = this.model.background.querySelector(`.ob-tile[data-col="${next.col}"][data-row="${next.row}"]`);
-			var type = tile.getAttribute("data-type");
+			// select the entered tile
+			var tile = this.scope.map.select(next.col, next.row);
 			// pick a way to deal with this tile
-			switch (type) {
+			switch (tile.type) {
 				case "alarm":
 				case "switch":
 				case "gap":
@@ -125,12 +178,14 @@ export class Player {
 					condition = false;
 					break;
 				case "gate":
-					condition = (this.model.player.getAttribute("data-element") === tile.getAttribute("data-element"));
+					// TODO: tile.elemental
+					condition = (this.elemental === tile.elemental);
 					break;
 				case "exit":
 				case "bridge":
 				case "door":
-					condition = (this.model.player.getAttribute("data-value") === "open");
+					// TODO: tile.value
+					condition = (tile.value === "open");
 					break;
 			}
 		}
@@ -151,32 +206,52 @@ export class Player {
 
 	inhabitants = function (current, next) {
 		// check for all bots
-		this.model.bots.forEach(bot => {
+		for(let bot of this.scope.bots.collection) {
 			// get the bot coordinates
-			let x = +bot.getAttribute("data-x");
-			let y = +bot.getAttribute("data-y");
-			let radius = bot.offsetWidth / 2;
+			let bx = bot.x;
+			let by = bot.y;
+			let br = bot.radius;
 			// check if the two intersect
-			let above = next.y + next.radius < y - radius;
-			let rightof = next.x - next.radius > x + radius;
-			let below = next.y - next.radius > y + radius;
-			let leftof = next.x + next.radius < x - radius;
+			let above = next.y + current.radius < by - br;
+			let rightof = next.x - current.radius > bx + br;
+			let below = next.y - current.radius > by + br;
+			let leftof = next.x + current.radius < bx - br;
 			// in case of collision
 			if (!(leftof || rightof || above || below)) {
 				// don't allow getting closer
-				if (Math.abs(current.x - x) > Math.abs(next.x - x)) {
+				if (Math.abs(current.x - bx) > Math.abs(next.x - bx)) {
 					next.x = current.x;
 					next.col = current.col;
 					next.horizontal = -next.horizontal;
 				}
-				if (Math.abs(current.y - y) > Math.abs(next.y - y)) {
+				if (Math.abs(current.y - by) > Math.abs(next.y - by)) {
 					next.y = current.y;
 					next.row = current.row;
 					next.vertical = -next.vertical;
 				}
-				return null;
 			}
-		});
+		}
+	}
+
+	scan = function (current, next) {
+		// highlight ahead
+		var addcol = 0, addrow = 0;
+		if (/N/.test(this.direction)) { addrow = -1; 	}
+		else if (/S/.test(this.direction)) { addrow = 1 }
+		if (/W/.test(this.direction)) { addcol = -1; }
+		else if (/E/.test(this.direction)) { addcol = 1; }
+		// stairstep the light levels across the cols and rows
+		for (let a = 0, b = this.range; a < b; a += 1) {
+			let col = this.col + a * addcol;
+			let row = this.row + a * addrow;
+			// don't scan off the map or through walls
+			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
+			// increase the light levels along the way
+			let tile = this.scope.map.select(col, row);
+			tile.light = this.range - a;
+			// don't scan through walls
+			if (!this.scope.map.passage(col, row)) break;
+		}
 	}
 
 	resolve = function (interval) {
@@ -197,6 +272,9 @@ export class Player {
 
 		// check for collisions with the bots
 		this.inhabitants(current, next);
+
+		// scan ahead
+		this.scan(current, next);
 
 		// apply the new position
 		this.position = next;

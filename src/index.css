@@ -1,4 +1,5 @@
 @import url("./viewport/viewport.css");
+@import url("./interface/interface.css");
 @import url("./background/background.css");
 @import url("./bots/bots.css");
 @import url("./controls/controls.css");
@@ -9,7 +10,7 @@
 *,
 :after,
 :before {
-	box-shadow: inset 0 0 1px #fff;
+	/*box-shadow: inset 0 0 1px #fff;*/
 	box-sizing: border-box
 }
 
