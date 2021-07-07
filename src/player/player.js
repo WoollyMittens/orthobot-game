@@ -233,7 +233,7 @@ export class Player {
 		}
 	}
 
-	scan = function (current, next) {
+	scan = function (interval) {
 		// highlight ahead
 		var addcol = 0, addrow = 0;
 		if (/N/.test(this.direction)) { addrow = -1; 	}
@@ -248,7 +248,7 @@ export class Player {
 			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
 			// increase the light levels along the way
 			let tile = this.scope.map.select(col, row);
-			tile.light = this.range - a;
+			tile.light = Math.min(tile.light + this.scope.model.actuation * this.scope.model.actuation * interval, this.range - a);
 			// don't scan through walls
 			if (!this.scope.map.passage(col, row)) break;
 		}
@@ -274,7 +274,7 @@ export class Player {
 		this.inhabitants(current, next);
 
 		// scan ahead
-		this.scan(current, next);
+		this.scan(interval);
 
 		// apply the new position
 		this.position = next;

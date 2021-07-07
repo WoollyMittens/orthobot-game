@@ -310,7 +310,7 @@ export class Bot {
 		}
 	}
 
-	scan = function (current, next) {
+	scan = function (next, interval) {
 		// scan ahead to the configured distance
 		var addcol = 0, addrow = 0;
 		if (/N/.test(this.direction)) { addrow = -1; 	}
@@ -324,7 +324,7 @@ export class Bot {
 			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
 			// increase the light levels along the way
 			let tile = this.scope.map.select(col, row);
-			tile.light = this.range - a;
+			tile.light = Math.min(tile.light + this.scope.model.actuation * this.scope.model.actuation * interval, this.range - a);;
 			// don't scan through walls
 			if (!this.scope.map.passage(col, row)) break;
 			// if player in way, change to hunt mode
@@ -349,7 +349,7 @@ export class Bot {
 		this.navigation(current, next);
 
 		// scan ahead
-		this.scan(current, next);
+		this.scan(next, interval);
 
 		// apply the new position
 		this.position = next;

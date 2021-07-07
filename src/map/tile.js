@@ -67,12 +67,12 @@ export class Tile {
 	}
 
 	set light(value) {
-		this.element.setAttribute("data-light", value);
+		this.element.setAttribute("data-light", value.toFixed(3));
 	}
 
 	resolve = function (interval) {
 		// reduce the illumination level by one
-		if (this.light > 0) this.light -= 1;
+		if (this.light > 0) this.light = this.light / (1 + interval * this.scope.model.actuation);
 		// check if any conditions have been met
 	}
 
