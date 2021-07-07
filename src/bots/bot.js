@@ -283,6 +283,34 @@ export class Bot {
 			next.colliding = "";
 		}
 		// if in hunt mode check for line of sight to player and adjust direction / shooting
+		if (current.patrol === "hunt") {
+			// if the target is close enough
+			let x = this.scope.player.x - this.x;
+			let y = this.scope.player.y - this.y;
+			let distance = Math.sqrt(x * x + y * y);
+			if (distance <= this.range * this.model.gridsize) {
+				// turn towards the target
+				let direction = Math.atan2(x, y);
+				if (direction < 2.749 && direction > 1.963) { next.direction = "NE"; }
+				else if (direction < 1.963 && direction > 1.178) { next.direction = "E"; }
+				else if (direction < 1.178 && direction > 0.393) { next.direction = "SE"; }
+				else if (direction < 0.393 && direction > -0.393) { next.direction = "S"; }
+				else if (direction < -0.393 && direction > -1.178) { next.direction = "SW"; }
+				else if (direction < -1.178 && direction > -1.963) { next.direction = "W"; }
+				else if (direction < -1.963 && direction > -2.749) { next.direction = "NW"; }
+				else { next.direction = "N"; }
+				// keep some distance
+				if (distance < this.model.gridsize) {
+					next.x = current.x;
+					next.y = current.y;
+					next.col = current.col;
+					next.row = current.row;
+				}
+			}
+		}
+	}
+
+	scan = function (current, next) {
 		// scan ahead to the configured distance
 		var addcol = 0, addrow = 0;
 		if (/N/.test(this.direction)) { addrow = -1; 	}
@@ -292,13 +320,15 @@ export class Bot {
 		for (let a = 0, b = this.range; a < b; a += 1) {
 			let col = this.col + a * addcol;
 			let row = this.row + a * addrow;
-			// don't scan off the map or through walls
+			// don't scan off the map
 			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
-			if (!this.scope.map.passage(col, row, this)) break;
 			// increase the light levels along the way
 			let tile = this.scope.map.select(col, row);
 			tile.light = this.range - a;
-			// if player in way, change to hunt mode and request projectile
+			// don't scan through walls
+			if (!this.scope.map.passage(col, row)) break;
+			// if player in way, change to hunt mode
+			if (col === this.scope.player.col && row === this.scope.player.row) next.patrol = "hunt";
 		}
 	}
 
@@ -317,6 +347,9 @@ export class Bot {
 
 		// follow the patrol rules
 		this.navigation(current, next);
+
+		// scan ahead
+		this.scan(current, next);
 
 		// apply the new position
 		this.position = next;

@@ -10,6 +10,7 @@ export class Map {
 	}
 
 	select = function (col, row) {
+		// return the tile from this coordinate
 		return this.matrix[row][col];
 	}
 
@@ -22,7 +23,7 @@ export class Map {
 			case "switch":
 			case "gap":
 			case "wall": return false;
-			case "gate": return (tile.elemental === entity.elemental);
+			case "gate": return (!entity || tile.elemental === entity.elemental);
 			case "exit":
 			case "bridge":
 			case "door": return (tile.value === "open");

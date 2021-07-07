@@ -233,7 +233,7 @@ export class Player {
 		}
 	}
 
-	navigation = function (current, next) {
+	scan = function (current, next) {
 		// highlight ahead
 		var addcol = 0, addrow = 0;
 		if (/N/.test(this.direction)) { addrow = -1; 	}
@@ -246,10 +246,11 @@ export class Player {
 			let row = this.row + a * addrow;
 			// don't scan off the map or through walls
 			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
-			if (!this.scope.map.passage(col, row, this)) break;
 			// increase the light levels along the way
 			let tile = this.scope.map.select(col, row);
 			tile.light = this.range - a;
+			// don't scan through walls
+			if (!this.scope.map.passage(col, row)) break;
 		}
 	}
 
@@ -272,8 +273,8 @@ export class Player {
 		// check for collisions with the bots
 		this.inhabitants(current, next);
 
-		// update effects on the environment
-		this.navigation(current, next);
+		// scan ahead
+		this.scan(current, next);
 
 		// apply the new position
 		this.position = next;
