@@ -72,7 +72,7 @@ export class Tile {
 
 	resolve = function (interval) {
 		// reduce the illumination level by one
-		if (this.light > 0) this.light = this.light / (1 + interval * this.scope.model.actuation);
+		if (this.light > 0.1) this.light = this.light / (1 + interval * this.scope.model.actuation);
 		// check if any conditions have been met
 	}
 

@@ -306,6 +306,12 @@ export class Bot {
 					next.col = current.col;
 					next.row = current.row;
 				}
+				// TODO: request a projectile
+				//	set shooting to 9 if 0
+				//	projectiles class will create projectile
+				//	updates will count back down to 0
+			} else {
+				// TODO: revert to roaming
 			}
 		}
 	}
@@ -338,6 +344,8 @@ export class Bot {
 
 		// calculate the new position
 		var next = this.movement(current, interval);
+
+		// TODO: increment pending animation states
 
 		// check for collisions with the tiles
 		this.environment(current, next);
