@@ -71,9 +71,16 @@ export class Tile {
 		this.element.setAttribute("data-light", value.toFixed(3));
 	}
 
-	illuminate = function (intensity) {
-		// accumulate the intensity of light sources from all updates
-		this.illumination += intensity;
+	lighting = function (interval) {
+		// set the light level the accumulated illumination
+		if (this.illumination > 0) {
+			this.light = Math.max(Math.min(this.illumination, 9), 0);
+			this.illumination = 0;
+		}
+		// or decay the existing shine
+		else {
+			this.light = Math.max(this.light - interval * this.scope.model.actuation * 5, 0);
+		}
 	}
 
 	render = function () {
@@ -89,15 +96,9 @@ export class Tile {
 	}
 
 	update = function (interval) {
-		// set the light level the accumulated illumination
-		if (this.illumination > 0) {
-			this.light = Math.max(Math.min(this.illumination, 9), 0);
-			this.illumination = 0;
-		}
-		// or decay the existing shine
-		else {
-			this.light = Math.max(this.light - interval * this.scope.model.actuation * 5, 0);
-		}
+		// apply the light effects
+		this.lighting(interval);
+
 		// check if any conditions have been met
 
 		// render all bots

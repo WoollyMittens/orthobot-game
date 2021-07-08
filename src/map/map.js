@@ -17,8 +17,8 @@ export class Map {
 	illuminate = function (col, row, intensity) {
 		// select the tile from the collection
 		const tile = this.select(col, row);
-		// set the light intensity to it
-		tile.illuminate(intensity);
+		// accumulate the intensity of all light sources this updates
+		tile.illumination += intensity;
 	}
 
 	passage = function (col, row, entity) {
