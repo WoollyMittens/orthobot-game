@@ -77,7 +77,7 @@ export class Bot {
 	}
 
 	set shooting(value) {
-		this.element.setAttribute("data-shooting", value);
+		this.element.setAttribute("data-shooting", value.toFixed(3));
 	}
 
 	get radius() {
@@ -98,6 +98,8 @@ export class Bot {
 			"acceleration": this.acceleration,
 			"direction": this.direction,
 			"colliding": this.colliding,
+			"shooting": this.shooting,
+			"elemental": this.elemental,
 			"topspeed": this.topspeed,
 			"patrol": this.patrol,
 			"range": this.range,
@@ -117,6 +119,7 @@ export class Bot {
 		// update only mutable properties
 		this.direction = data.direction;
 		this.colliding = data.colliding;
+		this.shooting = data.shooting;
 		this.patrol = data.patrol;
 		this.horizontal = data.horizontal;
 		this.vertical = data.vertical;
@@ -186,6 +189,11 @@ export class Bot {
 		next.row = parseInt(next.subrow);
 		// return the applied movement
 		return next;
+	}
+
+	animate = function (current, next, interval) {
+		// decrease the shooting cooldown
+		if (current.shooting >= 1) next.shooting = current.shooting - interval * this.model.actuation;
 	}
 
 	environment = function (current, next) {
@@ -308,10 +316,15 @@ export class Bot {
 				}
 				// TODO: request a projectile
 				//	set shooting to 9 if 0
+				if (current.shooting < 1) {
+					next.shooting = 9;
+					this.scope.projectiles.add(next.x, next.y, next.radius, next.direction, next.elemental);
+				}
 				//	projectiles class will create projectile
 				//	updates will count back down to 0
 			} else {
 				// TODO: revert to roaming
+				next.patrol = "roam";
 			}
 		}
 	}
@@ -329,8 +342,7 @@ export class Bot {
 			// don't scan off the map
 			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
 			// increase the light levels along the way
-			let tile = this.scope.map.select(col, row);
-			tile.light = Math.min(tile.light + this.scope.model.actuation * this.scope.model.actuation * interval, this.range - a);;
+			this.scope.map.illuminate(col, row, this.range - a);
 			// don't scan through walls
 			if (!this.scope.map.passage(col, row)) break;
 			// if player in way, change to hunt mode
@@ -339,6 +351,10 @@ export class Bot {
 	}
 
 	resolve = function (interval) {
+
+	}
+
+	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
 
@@ -346,6 +362,11 @@ export class Bot {
 		var next = this.movement(current, interval);
 
 		// TODO: increment pending animation states
+		// handle the flags put on the player
+		// apply regen
+		// apply damage
+		// apply shooting
+		this.animate(current, next, interval);
 
 		// check for collisions with the tiles
 		this.environment(current, next);
@@ -361,11 +382,7 @@ export class Bot {
 
 		// apply the new position
 		this.position = next;
-	}
 
-	update = function (interval) {
-		// process all changes
-		this.resolve(interval);
 		// render all bots
 		this.render();
 	}

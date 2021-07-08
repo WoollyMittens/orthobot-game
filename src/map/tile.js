@@ -17,6 +17,7 @@ export class Tile {
 		this.x = col * scope.model.gridsize;
 		this.y = row * scope.model.gridsize * scope.model.foreshorten;
 		this.z = this.y + 1;
+		this.illumination = 0;
 		// common properties
 		for (var key in attributes["common"]) {
 			this[key] = attributes["common"][key];
@@ -70,10 +71,9 @@ export class Tile {
 		this.element.setAttribute("data-light", value.toFixed(3));
 	}
 
-	resolve = function (interval) {
-		// reduce the illumination level by one
-		if (this.light > 0.1) this.light = this.light / (1 + interval * this.scope.model.actuation);
-		// check if any conditions have been met
+	illuminate = function (intensity) {
+		// accumulate the intensity of light sources from all updates
+		this.illumination += intensity;
 	}
 
 	render = function () {
@@ -89,8 +89,17 @@ export class Tile {
 	}
 
 	update = function (interval) {
-		// process all changes
-		this.resolve(interval);
+		// set the light level the accumulated illumination
+		if (this.illumination > 0) {
+			this.light = Math.max(Math.min(this.illumination, 9), 0);
+			this.illumination = 0;
+		}
+		// or decay the existing shine
+		else {
+			this.light = Math.max(this.light - interval * this.scope.model.actuation * 5, 0);
+		}
+		// check if any conditions have been met
+
 		// render all bots
 		this.render();
 	}

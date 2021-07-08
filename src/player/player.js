@@ -178,13 +178,11 @@ export class Player {
 					condition = false;
 					break;
 				case "gate":
-					// TODO: tile.elemental
 					condition = (this.elemental === tile.elemental);
 					break;
 				case "exit":
 				case "bridge":
 				case "door":
-					// TODO: tile.value
 					condition = (tile.value === "open");
 					break;
 			}
@@ -247,25 +245,25 @@ export class Player {
 			// don't scan off the map or through walls
 			if (col < 0 || row < 0 || col >= this.scope.model.colcount || row >= this.scope.model.rowcount) break;
 			// increase the light levels along the way
-			let tile = this.scope.map.select(col, row);
-			tile.light = Math.min(tile.light + this.scope.model.actuation * this.scope.model.actuation * interval, this.range - a);
+			this.scope.map.illuminate(col, row, this.range - a);
 			// don't scan through walls
 			if (!this.scope.map.passage(col, row)) break;
 		}
 	}
 
-	resolve = function (interval) {
-		// handle the flags put on the player
-		// apply regen
-		// apply damage
-		// apply reeling
-		// apply shooting
-
+	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
 
 		// calculate the new position
 		var next = this.movement(current, interval);
+
+		// TODO: increment pending animation states
+		// handle the flags put on the player
+		// apply regen
+		// apply damage
+		// apply reeling
+		// apply shooting
 
 		// check for collisions with the tiles
 		this.environment(current, next);
@@ -278,11 +276,7 @@ export class Player {
 
 		// apply the new position
 		this.position = next;
-	}
 
-	update = function (interval) {
-		// process all changes
-		this.resolve(interval);
 		// render the player
 		this.render();
 	}

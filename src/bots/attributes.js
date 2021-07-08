@@ -33,7 +33,6 @@ export const attributes = {
 		"elemental": 3,
 		"topspeed": 64,
 		"patrol": "roam",
-		// TODO: light cone value and distance
 		"range": 8
 	}
 }

@@ -1,6 +1,5 @@
 export const attributes = {
 	"common": {
-		// TODO: every cycle decays the light level down to 0. Bots' light cones will increase the value back to 9
 		"light": 0,
 		"occupied": "",
 		"interacted": ""

@@ -14,6 +14,13 @@ export class Map {
 		return this.matrix[row][col];
 	}
 
+	illuminate = function (col, row, intensity) {
+		// select the tile from the collection
+		const tile = this.select(col, row);
+		// set the light intensity to it
+		tile.illuminate(intensity);
+	}
+
 	passage = function (col, row, entity) {
 		// select the tile from the collection
 		const tile = this.select(col, row);
