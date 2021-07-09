@@ -10,13 +10,13 @@ export class Projectile {
 		this.z = y;
 		this.direction = direction;
 		this.elemental = elemental;
+		this.lifespan = 4;
+		this.scope.background.add(this.element);
 		// apply the offset to the starting position
 		if (/N/.test(direction)) { this.y -= offset; }
 		else if (/S/.test(direction)) { this.y += offset; }
 		if (/W/.test(direction)) { this.x -= offset; }
 		else if (/E/.test(direction)) { this.x += offset; }
-		// temporary lifespan
-		this.temp = 0;
 	}
 
 	get direction() {
@@ -46,20 +46,25 @@ export class Projectile {
 
 	update = function (interval) {
 		// TODO: add proper lifespan until collision
-		if (temp > 2000) {
-			this.scope.background.element.removeChild(this.element);
+		if (this.lifespan > 0) {
+			// decrease the lifespan
+			this.lifespan -= interval;
+			// apply movement
+			const distance = this.scope.model.gridsize * interval * 4;
+			if (/N/.test(this.direction)) { this.y -= distance; }
+			else if (/S/.test(this.direction)) { this.y += distance; }
+			if (/W/.test(this.direction)) { this.x -= distance; }
+			else if (/E/.test(this.direction)) { this.x += distance; }
+			// check for environment collisions
+			// check for bot collisions
+			// check for player collisions
+			// render the element
+			this.render();
+		} else {
+			// remove the element from the background
+			this.scope.background.remove(this.element);
+			// end its lifespan
+			this.lifespan = null;
 		}
-		this.temp += 1;
-		// apply movement
-		const distance = this.scope.model.gridsize * interval;
-		if (/N/.test(direction)) { this.y -= distance; }
-		else if (/S/.test(direction)) { this.y += distance; }
-		if (/W/.test(direction)) { this.x -= distance; }
-		else if (/E/.test(direction)) { this.x += distance; }
-		// check for environment collisions
-		// check for bot collisions
-		// check for player collisions
-		// render the element
-		this.render();
 	}
 }

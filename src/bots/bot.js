@@ -29,7 +29,7 @@ export class Bot {
 			this[key] = attributes[char][key];
 		}
 		// add the bot to the map
-		scope.background.element.appendChild(this.element);
+		scope.background.add(this.element);
 	}
 
 	get variant() {

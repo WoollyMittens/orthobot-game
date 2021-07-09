@@ -22,7 +22,7 @@ export class Player {
 			this[key] = attributes["common"][key];
 		}
 		// add the player to the background
-		scope.background.element.appendChild(this.element);
+		scope.background.add(this.element);
 	}
 
 	get variant() {

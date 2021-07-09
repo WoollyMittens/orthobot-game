@@ -36,6 +36,18 @@ export class Background {
 		this.element.setAttribute("data-row", value);
 	}
 
+	add = function (child) {
+		this.element.appendChild(child);
+	}
+
+	remove = function (child) {
+		this.element.removeChild(child);
+	}
+
+	find = function (query) {
+		return this.element.querySelectorAll(query);
+	}
+
 	render = function () {
 		// translate the background's attributes into styles
 		this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;

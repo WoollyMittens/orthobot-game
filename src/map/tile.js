@@ -34,7 +34,7 @@ export class Tile {
 			height: `${scope.model.gridsize}px`
 		});
 		// add the tile to the background layer
-		scope.background.element.appendChild(this.element);
+		scope.background.add(this.element);
 		// store this tile in a lookup matrix
 		matrix[row][col] = this;
 	}
