@@ -3,6 +3,8 @@
 	z-index: 2;
 }
 
+/* variants - (frog in a bee suit) */
+
 .ob-player[data-variant=""] {
 	background-color: Yellow;
 	width: 64px;
@@ -10,6 +12,12 @@
 	margin: -32px 0 0 -32px;
 }
 
+/* status effects */
+
 .ob-player[data-direction="S"] {}
 
-.ob-player[data-status="idle"] {}
+.ob-player[data-acceleration="^0"] {}
+
+.ob-player[data-reeling="^0"] {}
+
+.ob-player[data-shooting="^0"] {}

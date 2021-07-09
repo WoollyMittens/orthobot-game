@@ -3,6 +3,8 @@
 	z-index: 2;
 }
 
+/* variants */
+
 .ob-bot[data-variant="a"] {
 	background-color: Red;
 	width: 64px;
@@ -23,3 +25,11 @@
 	height: 64px;
 	margin: -32px 0 0 -32px;
 }
+
+/* status effects */
+
+.ob-player[data-direction="S"] {}
+
+.ob-player[data-acceleration^="0"] {}
+
+.ob-player[data-shooting^="0"] {}

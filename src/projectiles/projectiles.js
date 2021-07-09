@@ -11,18 +11,17 @@ export class Projectiles {
 		this.collection = {};
 	}
 
-	add = function (x, y, offset, direction, elemental) {
+	add = function (x, y, offset, direction, elemental, origin) {
 		// add a projectile to the map
 		this.count += 1;
-		this.collection["projectile_" + this.count] = new Projectile(this.scope, x, y, offset, direction, elemental);
+		this.collection["projectile_" + this.count] = new Projectile(this.scope, x, y, offset, direction, elemental, origin);
 	}
 
 	update = function (interval) {
 		// update all projectiles
-		this.scope.interface.log = this.scope.background.element.querySelectorAll(".ob-projectile").length;
 		for (let key in this.collection) {
 			// update the projectile
-			if (this.collection[key].lifespan !== null) { this.collection[key].update(interval); }
+			if (this.collection[key].active) { this.collection[key].update(interval); }
 			// or delete the projectile
 			else { delete this.collection[key]; }
 		}

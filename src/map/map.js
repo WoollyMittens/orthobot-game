@@ -22,6 +22,7 @@ export class Map {
 	}
 
 	passage = function (col, row, entity) {
+		// TODO: if the coordinates are out of bounds, return a wall
 		// select the tile from the collection
 		const tile = this.select(col, row);
 		// decide if the entity meets the conditions

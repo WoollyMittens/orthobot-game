@@ -6,6 +6,8 @@
 	margin: -8px 0 0 -8px;
 }
 
+/* elemental values */
+
 .ob-projectile[data-elemental="0"] {
   background-color: yellow;
 }
@@ -21,3 +23,9 @@
 .ob-projectile[data-elemental="3"] {
   background-color: blue;
 }
+
+/* status effects */
+
+.ob-projectile[data-direction="S"] {}
+
+.ob-projectile[data-impact^="0"] {}
