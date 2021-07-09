@@ -1,0 +1,23 @@
+.ob-projectile {
+	position: absolute;
+	z-index: 3;
+  width: 16px;
+	height: 16px;
+	margin: -8px 0 0 -8px;
+}
+
+.ob-projectile[data-elemental="0"] {
+  background-color: yellow;
+}
+
+.ob-projectile[data-elemental="1"] {
+  background-color: red;
+}
+
+.ob-projectile[data-elemental="2"] {
+  background-color: green;
+}
+
+.ob-projectile[data-elemental="3"] {
+  background-color: blue;
+}

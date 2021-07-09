@@ -1,16 +1,24 @@
+import {
+	Projectile
+} from "./projectile.js";
+
 export class Projectiles {
 	constructor(scope) {
 		// expose the scope
 		this.scope = scope;
 	}
 
-	add = function (x, y, radius, direction, elemental) {
-		this.scope.interface.log = ["requesting projectile", x, y, radius, direction, elemental]
+	get collection() {
+		return this.scope.background.element.querySelectorAll(".ob-projectile");
+	}
+
+	add = function (x, y, offset, direction, elemental) {
+		// add a projectile to the map
+		var projectile = new Projectile(this.scope, x, y, offset, direction, elemental);
 	}
 
 	update = function (interval) {
-		// create new shots
-		// move existing shots
-		// resolve hits
+		// update all projectiles
+		
 	}
 }

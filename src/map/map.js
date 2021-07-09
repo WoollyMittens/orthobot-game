@@ -1,6 +1,6 @@
 import {
 	Tile
-} from "./Tile.js";
+} from "./tile.js";
 
 export class Map {
 	constructor(scope) {

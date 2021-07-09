@@ -350,10 +350,6 @@ export class Bot {
 		}
 	}
 
-	resolve = function (interval) {
-
-	}
-
 	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
