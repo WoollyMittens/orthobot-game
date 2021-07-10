@@ -11,10 +11,10 @@ export class Projectiles {
 		this.collection = {};
 	}
 
-	add = function (x, y, offset, direction, elemental, origin) {
+	add = function (origin) {
 		// add a projectile to the map
 		this.count += 1;
-		this.collection["projectile_" + this.count] = new Projectile(this.scope, x, y, offset, direction, elemental, origin);
+		this.collection["projectile_" + this.count] = new Projectile(this.scope, origin);
 	}
 
 	update = function (interval) {

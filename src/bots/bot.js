@@ -318,7 +318,7 @@ export class Bot {
 				//	set shooting to 9 if 0
 				if (current.shooting < 1) {
 					next.shooting = 9;
-					this.scope.projectiles.add(next.x, next.y, next.radius, next.direction, next.elemental, this);
+					this.scope.projectiles.add(this);
 				}
 				//	projectiles class will create projectile
 				//	updates will count back down to 0

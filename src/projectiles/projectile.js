@@ -1,5 +1,5 @@
 export class Projectile {
-	constructor(scope, x, y, offset, direction, elemental, origin) {
+	constructor(scope, origin) {
 		// expose the scope
 		this.scope = scope;
 		this.model = scope.model;
@@ -7,21 +7,22 @@ export class Projectile {
 		// add a projectile element to the background
 		this.element = document.createElement("div");
 		this.element.className = "ob-projectile";
-		this.x = x;
-		this.y = y;
-		this.direction = direction;
-		this.elemental = elemental;
+		this.x = origin.x;
+		this.y = origin.y;
+		this.offset = origin.radius;
+		this.direction = origin.direction;
+		this.elemental = origin.elemental;
 		this.active = true;
 		this.impact = 0;
 		this.scope.background.add(this.element);
 		// apply the offset to the starting position
-		if (/N/.test(direction)) { this.y -= offset; }
-		else if (/S/.test(direction)) { this.y += offset; }
-		if (/W/.test(direction)) { this.x -= offset; }
-		else if (/E/.test(direction)) { this.x += offset; }
+		if (/N/.test(this.direction)) { this.y -= this.offset; }
+		else if (/S/.test(this.direction)) { this.y += this.offset; }
+		if (/W/.test(this.direction)) { this.x -= this.offset; }
+		else if (/E/.test(this.direction)) { this.x += this.offset; }
 		// store the col and row
-		this.col = this.x / this.model.gridsize;
-		this.row = this.y / this.model.gridsize / this.model.foreshorten;
+		this.col = parseInt(this.x / this.model.gridsize);
+		this.row = parseInt(this.y / this.model.gridsize / this.model.foreshorten);
 	}
 
 	get impact() {
@@ -90,13 +91,17 @@ export class Projectile {
 		// calculate the row and col
 		next.col = parseInt(next.x / this.model.gridsize);
 		next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
+		// light up the tile
+		this.scope.map.illuminate(next.col, next.row, 5);
 		// return the applied movement
 		return next;
 	}
 
 	animate = function (interval) {
-		// decrease the shooting cooldown
+		// decrease the impact effect counter
 		if (this.impact >= 1) {
+			// light up the tile
+			this.scope.map.illuminate(this.col, this.row, this.impact);
 			// update the animation progress
 			const impact = this.impact - interval * this.model.actuation;
 			const scale = 10 - impact;
