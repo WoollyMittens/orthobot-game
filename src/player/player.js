@@ -65,6 +65,14 @@ export class Player {
 		this.element.setAttribute("data-shooting", value);
 	}
 
+	get health() {
+		return +this.element.getAttribute("data-health");
+	}
+
+	set health(value) {
+		this.element.setAttribute("data-health", value.toFixed(3));
+	}
+
 	get radius() {
 		return this.element.offsetWidth / 2 || this.model.gridsize / 2;
 	}
@@ -98,6 +106,9 @@ export class Player {
 		return {
 			"acceleration": this.acceleration,
 			"direction": this.direction,
+			"shooting": this.shooting,
+			"health": this.health,
+			"elemental": this.elemental,
 			"topspeed": this.topspeed,
 			"horizontal": this.horizontal,
 			"vertical": this.vertical,
@@ -111,6 +122,8 @@ export class Player {
 
 	set position(data) {
 		// update only mutable properties
+		this.shooting = data.shooting;
+		this.health = data.health;
 		this.horizontal = data.horizontal;
 		this.vertical = data.vertical;
 		this.col = data.col;
@@ -159,6 +172,11 @@ export class Player {
 		next.row = parseInt(next.y / this.model.gridsize / this.model.foreshorten);
 		// return the applied movement
 		return next;
+	}
+
+	animate = function (current, next, interval) {
+		// decrease the shooting cooldown
+		if (current.shooting >= 1) next.shooting = current.shooting - interval * this.model.actuation;
 	}
 
 	environment = function (current, next) {
@@ -251,6 +269,12 @@ export class Player {
 		}
 	}
 
+	damage = function(elemental) {
+		// TODO: rock/paper/scissor damage calculation
+		this.scope.interface.log = ["player hit", elemental];
+		this.health = Math.max(this.health - 1, 0);
+	}
+
 	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
@@ -259,11 +283,10 @@ export class Player {
 		var next = this.movement(current, interval);
 
 		// TODO: increment pending animation states
-		// handle the flags put on the player
 		// apply regen
 		// apply damage
-		// apply reeling
 		// apply shooting
+		this.animate(current, next, interval);
 
 		// check for collisions with the tiles
 		this.environment(current, next);

@@ -162,7 +162,8 @@ export class Projectile {
 				if (!(leftof || rightof || above || below)) {
 					// note the colision
 					next.impact = 9;
-					// TODO: convey damage to the entity
+					// convey damage to the entity
+					entity.damage(current.elemental);
 					// don't allow getting closer
 					if (Math.abs(current.x - ex) > Math.abs(next.x - ex)) {
 						next.x = current.x;

@@ -16,7 +16,7 @@
 }
 
 .ob-tile:after {
-	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, #000 25%, #000 100%);
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, #000 25%);
 	content: "";
 	display: block;
 	position: absolute;
@@ -40,7 +40,7 @@
 /* walls */
 
 [data-variant="A"] {
-	background-image: linear-gradient(180deg, crimson 0%, crimson 50%, maroon 50%, maroon 100%);
+	background-image: linear-gradient(180deg, crimson 0%, crimson 50%, maroon 50%);
 }
 
 [data-variant="A"]:after {
@@ -58,23 +58,23 @@
 /* floor */
 
 [data-variant="C"] {
-	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, teal 25%, teal 100%);
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, teal 25%);
 }
 
 /* gate */
 
 [data-variant="D"] {
-	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, magenta 25%, magenta 100%);
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, magenta 25%);
 }
 
 /* entrance */
 
 [data-variant="Y"] {
-	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, orange 25%, orange 100%);
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, orange 25%);
 }
 
 /* exit */
 
 [data-variant="Z"] {
-	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, purple 25%, purple 100%);
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, purple 25%);
 }

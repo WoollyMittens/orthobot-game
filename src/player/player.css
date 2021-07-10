@@ -16,8 +16,61 @@
 
 .ob-player[data-direction="S"] {}
 
-.ob-player[data-acceleration="^0"] {}
+.ob-player[data-acceleration^="0"] {}
 
-.ob-player[data-reeling="^0"] {}
+.ob-player[data-reeling^="0"] {}
 
-.ob-player[data-shooting="^0"] {}
+.ob-player[data-shooting^="0"] {}
+
+/* health bar */
+
+.ob-player:before {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 6px;
+	top: -10px;
+	left: 4px;
+	right: 4px;
+}
+
+.ob-player[data-health^="9"]:before {
+	display: none;
+}
+
+.ob-player[data-health^="8"]:before {
+	background-image: linear-gradient(90deg, lime 0%, lime 88%, transparent 88%);
+}
+
+.ob-player[data-health^="7"]:before {
+	background-image: linear-gradient(90deg, lime 0%, lime 77%, transparent 77%);
+}
+
+.ob-player[data-health^="6"]:before {
+	background-image: linear-gradient(90deg, lime 0%, lime 66%, transparent 66%);
+}
+
+.ob-player[data-health^="5"]:before {
+	background-image: linear-gradient(90deg, yellow 0%, yellow 55%, transparent 55%);
+}
+
+.ob-player[data-health^="4"]:before {
+	background-image: linear-gradient(90deg, yellow 0%, yellow 44%, transparent 44%);
+}
+
+.ob-player[data-health^="3"]:before {
+	background-image: linear-gradient(90deg, yellow 0%, yellow 33%, transparent 33%);
+}
+
+.ob-player[data-health^="2"]:before {
+	background-image: linear-gradient(90deg, red 0%, red 22%, transparent 22%);
+}
+
+.ob-player[data-health^="1"]:before {
+	background-image: linear-gradient(90deg, red 0%, red 11%, transparent 11%);
+}
+
+.ob-player[data-health^="0"]:before {
+	display: none;
+}
+

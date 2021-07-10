@@ -80,6 +80,14 @@ export class Bot {
 		this.element.setAttribute("data-shooting", value.toFixed(3));
 	}
 
+	get health() {
+		return +this.element.getAttribute("data-health");
+	}
+
+	set health(value) {
+		this.element.setAttribute("data-health", value.toFixed(3));
+	}
+
 	get radius() {
 		return this.element.offsetWidth / 2 || this.model.gridsize / 2;
 	}
@@ -99,6 +107,7 @@ export class Bot {
 			"direction": this.direction,
 			"colliding": this.colliding,
 			"shooting": this.shooting,
+			"health": this.health,
 			"elemental": this.elemental,
 			"topspeed": this.topspeed,
 			"patrol": this.patrol,
@@ -120,6 +129,7 @@ export class Bot {
 		this.direction = data.direction;
 		this.colliding = data.colliding;
 		this.shooting = data.shooting;
+		this.health = data.health;
 		this.patrol = data.patrol;
 		this.horizontal = data.horizontal;
 		this.vertical = data.vertical;
@@ -314,7 +324,6 @@ export class Bot {
 					next.col = current.col;
 					next.row = current.row;
 				}
-				// TODO: request a projectile
 				//	set shooting to 9 if 0
 				if (current.shooting < 1) {
 					next.shooting = 9;
@@ -323,7 +332,7 @@ export class Bot {
 				//	projectiles class will create projectile
 				//	updates will count back down to 0
 			} else {
-				// TODO: revert to roaming
+				// revert to roaming
 				next.patrol = "roam";
 			}
 		}
@@ -350,6 +359,12 @@ export class Bot {
 		}
 	}
 
+	damage = function(elemental) {
+		// TODO: rock/paper/scissor damage calculation
+		this.scope.interface.log = ["bot hit", elemental];
+		this.health = Math.max(this.health - 1, 0);
+	}
+
 	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
@@ -358,7 +373,6 @@ export class Bot {
 		var next = this.movement(current, interval);
 
 		// TODO: increment pending animation states
-		// handle the flags put on the player
 		// apply regen
 		// apply damage
 		// apply shooting
