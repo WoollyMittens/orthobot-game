@@ -202,7 +202,8 @@ export class Bot {
 	}
 
 	animate = function (current, next, interval) {
-		// decrease the shooting cooldown
+		// TODO: apply the health regen
+		// apply the shooting cooldown
 		if (current.shooting >= 1) next.shooting = current.shooting - interval * this.model.actuation;
 	}
 
@@ -360,10 +361,9 @@ export class Bot {
 	}
 
 	damage = function(elemental) {
-		// TODO: rock/paper/scissor damage calculation
+		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
 		this.scope.interface.log = ["bot hit", elemental];
 		this.health = Math.max(this.health - 1, 0);
-		// TODO: for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
 	}
 
 	update = function (interval) {
@@ -376,10 +376,7 @@ export class Bot {
 		// calculate the new position
 		var next = this.movement(current, interval);
 
-		// TODO: increment pending animation states
-		// apply regen
-		// apply damage
-		// apply shooting
+		// increment pending animation states
 		this.animate(current, next, interval);
 
 		// check for collisions with the tiles

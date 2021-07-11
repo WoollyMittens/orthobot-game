@@ -181,14 +181,21 @@ export class Player {
 	}
 
 	animate = function (current, next, interval) {
-		// pick between a button press and a button hold
-		if (current.primary) {
-			this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
-		} else if (this.previous.primary && !current.primary) {
-			this.scope.interface.log = ["button let go after", new Date().getTime() - this.previous.primary];
-		}
-		// decrease the shooting cooldown
-		if (current.shooting >= 1) next.shooting = current.shooting - interval * this.model.actuation;
+		// TODO: apply the health regen
+		// if shooting is still cooling down
+		if (current.shooting >= 1) {
+			// apply the shooting cooldown
+			next.shooting = current.shooting - interval * this.model.actuation
+		} else {
+			// distinguish between a button press and a button hold
+			if (current.primary) {
+				// TODO: extend the reel
+				this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
+			} else if (this.previous.primary && !current.primary) {
+				// TODO: launch a projectile
+				this.scope.interface.log = ["button let go after", new Date().getTime() - this.previous.primary];
+			}
+		};
 	}
 
 	environment = function (current, next) {
@@ -284,9 +291,8 @@ export class Player {
 	}
 
 	damage = function(elemental) {
-		// TODO: rock/paper/scissor damage calculation
+		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
 		this.health = Math.max(this.health - 1, 0);
-		// TODO: for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
 	}
 
 	update = function (interval) {
@@ -303,10 +309,7 @@ export class Player {
 		// calculate the new position
 		var next = this.movement(current, interval);
 
-		// TODO: increment pending animation states
-		// apply regen
-		// apply damage
-		// apply shooting
+		// increment pending animation states
 		this.animate(current, next, interval);
 
 		// check for collisions with the tiles
