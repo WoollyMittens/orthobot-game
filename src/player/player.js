@@ -185,15 +185,22 @@ export class Player {
 		// if shooting is still cooling down
 		if (current.shooting >= 1) {
 			// apply the shooting cooldown
-			next.shooting = current.shooting - interval * this.model.actuation
+			next.shooting = Math.max(current.shooting - interval * this.model.actuation * 3, 0);
 		} else {
 			// distinguish between a button press and a button hold
 			if (current.primary) {
 				// TODO: extend the reel
 				this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
 			} else if (this.previous.primary && !current.primary) {
-				// TODO: launch a projectile
-				this.scope.interface.log = ["button let go after", new Date().getTime() - this.previous.primary];
+				// if the button press was short enough
+				const duration = new Date().getTime() - this.previous.primary;
+				this.scope.interface.log = ["button let go after", duration];
+				if (current.shooting < 1 && duration < 200) {
+					// set shooting to 9 if 0
+					next.shooting = 9;
+					// launch a projectile
+					this.scope.projectiles.add(this);
+				}
 			}
 		};
 	}

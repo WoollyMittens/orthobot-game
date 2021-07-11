@@ -203,8 +203,10 @@ export class Bot {
 
 	animate = function (current, next, interval) {
 		// TODO: apply the health regen
+		// TODO: go into hunt mode if damaged
+		if (current.health < 9) next.patrol = "hunt";
 		// apply the shooting cooldown
-		if (current.shooting >= 1) next.shooting = current.shooting - interval * this.model.actuation;
+		if (current.shooting >= 1) Math.max(next.shooting = current.shooting - interval * this.model.actuation, 0);
 	}
 
 	environment = function (current, next) {
@@ -330,8 +332,6 @@ export class Bot {
 					next.shooting = 9;
 					this.scope.projectiles.add(this);
 				}
-				//	projectiles class will create projectile
-				//	updates will count back down to 0
 			} else {
 				// revert to roaming
 				next.patrol = "roam";
