@@ -23,6 +23,7 @@ export class Keyboard {
 				this.vectors.east = true;
 				break;
 			case " ":
+				this.vectors.primary = true;
 				break;
 		}
 		// update the attributes
@@ -46,6 +47,7 @@ export class Keyboard {
 				this.vectors.east = false;
 				break;
 			case " ":
+				this.vectors.primary = false;
 				break;
 		}
 		// update the attributes

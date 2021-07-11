@@ -363,11 +363,15 @@ export class Bot {
 		// TODO: rock/paper/scissor damage calculation
 		this.scope.interface.log = ["bot hit", elemental];
 		this.health = Math.max(this.health - 1, 0);
+		// TODO: for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
 	}
 
 	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
+
+		// don't bother if health is depleted
+		if (current.health <= 0) return;
 
 		// calculate the new position
 		var next = this.movement(current, interval);

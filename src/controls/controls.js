@@ -22,8 +22,8 @@ export class Controls {
 			east: false,
 			south: false,
 			west: false,
-			primary: false,
-			secondary: false
+			primary: null,
+			secondary: null
 		}
 		// add keyboard controls
 		this.keyboard = new Keyboard(this.vectors, this.update.bind(this));
@@ -58,7 +58,17 @@ export class Controls {
 				this.scope.player.acceleration = 0;
 			}
 			// register the primary input
+			if (this.vectors.primary) {
+				this.scope.player.primary = new Date().getTime();
+			} else {
+				this.scope.player.primary = 0;
+			}
 			// register the secondary input
+			if (this.vectors.secondary) {
+				this.scope.player.secondary = new Date().getTime();
+			} else {
+				this.scope.player.secondary = 0;
+			}
 		}, 50);
 	}
 

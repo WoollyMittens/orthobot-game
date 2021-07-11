@@ -23,6 +23,8 @@ export class Player {
 		}
 		// add the player to the background
 		scope.background.add(this.element);
+		// store the starting position
+		this.previous = {...this.position};
 	}
 
 	get variant() {
@@ -107,6 +109,8 @@ export class Player {
 			"acceleration": this.acceleration,
 			"direction": this.direction,
 			"shooting": this.shooting,
+			"primary": this.primary,
+			"secondary": this.secondary,
 			"health": this.health,
 			"elemental": this.elemental,
 			"topspeed": this.topspeed,
@@ -121,6 +125,8 @@ export class Player {
 	}
 
 	set position(data) {
+		// remember for the next iteration
+		this.previous = {...data};
 		// update only mutable properties
 		this.shooting = data.shooting;
 		this.health = data.health;
@@ -175,6 +181,12 @@ export class Player {
 	}
 
 	animate = function (current, next, interval) {
+		// pick between a button press and a button hold
+		if (current.primary) {
+			this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
+		} else if (this.previous.primary && !current.primary) {
+			this.scope.interface.log = ["button let go after", new Date().getTime() - this.previous.primary];
+		}
 		// decrease the shooting cooldown
 		if (current.shooting >= 1) next.shooting = current.shooting - interval * this.model.actuation;
 	}
@@ -223,6 +235,8 @@ export class Player {
 	inhabitants = function (current, next) {
 		// check for all bots
 		for(let bot of this.scope.bots.collection) {
+			// allow traversing disabled bots
+			if (bot.health <= 0) break;
 			// get the bot coordinates
 			let bx = bot.x;
 			let by = bot.y;
@@ -271,13 +285,20 @@ export class Player {
 
 	damage = function(elemental) {
 		// TODO: rock/paper/scissor damage calculation
-		this.scope.interface.log = ["player hit", elemental];
 		this.health = Math.max(this.health - 1, 0);
+		// TODO: for numeric rock/paper/scissors f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
 	}
 
 	update = function (interval) {
 		// fetch the current position
 		var current = this.position;
+
+		// if health is depleted
+		if (current.health <= 0) {
+			// TODO: show the kill screen
+			// don't continue
+			return;
+		}
 
 		// calculate the new position
 		var next = this.movement(current, interval);
