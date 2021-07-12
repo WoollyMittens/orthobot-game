@@ -250,7 +250,7 @@ export class Player {
 		// check for all bots
 		for(let bot of this.scope.bots.collection) {
 			// allow traversing disabled bots
-			if (bot.health <= 0) break;
+			if (bot.health > 0) break;
 			// get the bot coordinates
 			let bx = bot.x;
 			let by = bot.y;

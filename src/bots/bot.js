@@ -243,6 +243,8 @@ export class Bot {
 		for (let entity of entities) {
 			// skip unloaded player and self
 			if (entity?.element !== this.element) {
+				// allow traversing disabled bots
+				if (entity.health <= 0) break;
 				// get the bot coordinates
 				let ex = entity.x;
 				let ey = entity.y;
