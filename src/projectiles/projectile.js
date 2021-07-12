@@ -12,6 +12,7 @@ export class Projectile {
 		this.offset = origin.radius;
 		this.direction = origin.direction;
 		this.elemental = origin.elemental;
+		this.weapon = origin.weapon;
 		this.active = true;
 		this.impact = 0;
 		this.scope.background.add(this.element);
@@ -53,6 +54,7 @@ export class Projectile {
 		// return all positional data as one object
 		return {
 			"direction": this.direction,
+			"weapon": this.weapon,
 			"elemental": this.elemental,
 			"impact": this.impact,
 			"col": this.col,
@@ -163,7 +165,7 @@ export class Projectile {
 					// note the colision
 					next.impact = 9;
 					// convey damage to the entity
-					entity.damage(current.elemental);
+					entity.damage(current.weapon, current.elemental);
 					// don't allow getting closer
 					if (Math.abs(current.x - ex) > Math.abs(next.x - ex)) {
 						next.x = current.x;

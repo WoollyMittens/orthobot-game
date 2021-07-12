@@ -10,6 +10,7 @@ export const attributes = {
 	"a": {
 		"direction": "S",
 		"regen": 3,
+		"cooldown": 20,
 		"armor": 1,
 		"weapon": 1,
 		"elemental": 1,
@@ -19,6 +20,7 @@ export const attributes = {
 	},
 	"b": {
 		"regen": 2,
+		"cooldown": 15,
 		"armor": 2,
 		"weapon": 1,
 		"elemental": 2,
@@ -28,6 +30,7 @@ export const attributes = {
 	},
 	"c": {
 		"regen": 1,
+		"cooldown": 10,
 		"armor": 3,
 		"weapon": 1,
 		"elemental": 3,

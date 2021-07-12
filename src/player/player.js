@@ -181,28 +181,32 @@ export class Player {
 	}
 
 	animate = function (current, next, interval) {
-		// TODO: apply the health regen
+		// apply the health regen
+		if (current.health < 9) {
+			next.health = Math.min(current.health + interval * this.regen, 9);
+		}
 		// if shooting is still cooling down
 		if (current.shooting >= 1) {
 			// apply the shooting cooldown
-			next.shooting = Math.max(current.shooting - interval * this.model.actuation * 3, 0);
-		} else {
-			// distinguish between a button press and a button hold
-			if (current.primary) {
-				// TODO: extend the reel
-				this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
-			} else if (this.previous.primary && !current.primary) {
-				// if the button press was short enough
-				const duration = new Date().getTime() - this.previous.primary;
-				this.scope.interface.log = ["button let go after", duration];
-				if (current.shooting < 1 && duration < 200) {
-					// set shooting to 9 if 0
-					next.shooting = 9;
-					// launch a projectile
-					this.scope.projectiles.add(this);
-				}
+			next.shooting = Math.max(current.shooting - interval * this.cooldown * 2, 0);
+		} 
+		// or if the button is held
+		else if (current.primary) {
+			// TODO: extend the reel
+			this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
+		} 
+		// of if the button it tapped
+		else if (this.previous.primary && !current.primary) {
+			// if the button press was short enough
+			const duration = new Date().getTime() - this.previous.primary;
+			this.scope.interface.log = ["button let go after", duration];
+			if (current.shooting < 1 && duration < 250) {
+				// set shooting to 9 if 0
+				next.shooting = 9;
+				// launch a projectile
+				this.scope.projectiles.add(this);
 			}
-		};
+		}
 	}
 
 	environment = function (current, next) {
@@ -249,8 +253,6 @@ export class Player {
 	inhabitants = function (current, next) {
 		// check for all bots
 		for(let bot of this.scope.bots.collection) {
-			// allow traversing disabled bots
-			if (bot.health > 0) break;
 			// get the bot coordinates
 			let bx = bot.x;
 			let by = bot.y;
@@ -262,6 +264,8 @@ export class Player {
 			let leftof = next.x + current.radius < bx - br;
 			// in case of collision
 			if (!(leftof || rightof || above || below)) {
+				// allow traversing disabled bots
+				if (bot.health <= 0) break;
 				// don't allow getting closer
 				if (Math.abs(current.x - bx) > Math.abs(next.x - bx)) {
 					next.x = current.x;
@@ -297,9 +301,12 @@ export class Player {
 		}
 	}
 
-	damage = function(elemental) {
-		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
-		this.health = Math.max(this.health - 1, 0);
+	damage = function(weapon, elemental) {
+		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
+		const rps = (elemental - this.elemental + 4) % 3;
+		const hit = (this.elemental > 0) ? weapon + weapon * rps : weapon + weapon;
+		this.scope.interface.log = ["player hit for", hit];
+		this.health = Math.max(this.health - hit / this.armor, 0);
 	}
 
 	update = function (interval) {

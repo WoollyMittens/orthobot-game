@@ -202,11 +202,12 @@ export class Bot {
 	}
 
 	animate = function (current, next, interval) {
-		// TODO: apply the health regen
-		// TODO: go into hunt mode if damaged
+		// apply the health regen
+		if (current.health < 9) next.health = Math.min(current.health + interval * this.regen, 9);
+		// go into hunt mode if damaged
 		if (current.health < 9) next.patrol = "hunt";
 		// apply the shooting cooldown
-		if (current.shooting >= 1) Math.max(next.shooting = current.shooting - interval * this.model.actuation, 0);
+		if (current.shooting >= 1) Math.max(next.shooting = current.shooting - interval * this.cooldown, 0);
 	}
 
 	environment = function (current, next) {
@@ -243,8 +244,6 @@ export class Bot {
 		for (let entity of entities) {
 			// skip unloaded player and self
 			if (entity?.element !== this.element) {
-				// allow traversing disabled bots
-				if (entity.health <= 0) break;
 				// get the bot coordinates
 				let ex = entity.x;
 				let ey = entity.y;
@@ -256,6 +255,8 @@ export class Bot {
 				let leftof = next.x + next.radius < ex - er;
 				// in case of collision
 				if (!(leftof || rightof || above || below)) {
+					// allow traversing disabled bots
+					if (entity.health <= 0) break;
 					// note the colision
 					next.colliding = (entity.element === this.scope.player.element) ? "player" : "bot";
 					// don't allow getting closer
@@ -362,10 +363,12 @@ export class Bot {
 		}
 	}
 
-	damage = function(elemental) {
-		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+5)%3 = 0,1,2 = lose,win,draw = red,green,blue
-		this.scope.interface.log = ["bot hit", elemental];
-		this.health = Math.max(this.health - 1, 0);
+	damage = function(weapon, elemental) {
+		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
+		const rps = (elemental - this.elemental + 4) % 3;
+		const hit = (elemental > 0) ? weapon + weapon * rps : weapon + weapon;
+		this.scope.interface.log = ["bot hit for", hit];
+		this.health = Math.max(this.health - hit / this.armor, 0);
 	}
 
 	update = function (interval) {

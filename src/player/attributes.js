@@ -11,14 +11,16 @@ export const attributes = {
 		"range": 8,
 		"health": 9,
 		"regen": 1,
-		"armor": 0,
+		"cooldown": 20,
+		"armor": 1,
 		"weapon": 1,
 		"reeling": 0,
 		"shooting": 0,
 		"elemental": 0
 	},
 	"a": {
-		"regen": 3,
+		"regen": 1,
+		"cooldown": 30,
 		"armor": 1,
 		"weapon": 1,
 		"elemental": 1,
@@ -26,17 +28,19 @@ export const attributes = {
 		"range": 4
 	},
 	"b": {
-		"regen": 2,
+		"regen": 1,
+		"cooldown": 20,
 		"armor": 2,
-		"weapon": 2,
+		"weapon": 1,
 		"elemental": 2,
 		"topspeed": 96,
 		"range": 6
 	},
 	"c": {
 		"regen": 1,
+		"cooldown": 10,
 		"armor": 3,
-		"weapon": 3,
+		"weapon": 1,
 		"elemental": 3,
 		"topspeed": 64,
 		"range": 8
