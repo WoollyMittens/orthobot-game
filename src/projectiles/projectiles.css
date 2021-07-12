@@ -6,26 +6,139 @@
 	margin: -8px 0 0 -8px;
 }
 
+.ob-projectile:before,
+.ob-projectile:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -8px 0 0 -8px;
+  width: 16px;
+  height: 16px;
+}
+
+.ob-projectile:before {
+  animation-iteration-count: infinite;
+  animation-duration: 500ms;
+  animation-delay: 0s;
+}
+
+.ob-projectile:after {
+  animation-iteration-count: infinite;
+  animation-duration: 500ms;
+  animation-delay: 250ms;
+}
+
 /* elemental values */
 
-.ob-projectile[data-elemental="0"] {
+.ob-projectile[data-elemental="0"],
+.ob-projectile[data-elemental="0"]:before,
+.ob-projectile[data-elemental="0"]:after {
   background-color: yellow;
 }
 
-.ob-projectile[data-elemental="1"] {
+.ob-projectile[data-elemental="1"],
+.ob-projectile[data-elemental="1"]:before,
+.ob-projectile[data-elemental="1"]:after {
   background-color: green;
 }
 
-.ob-projectile[data-elemental="2"] {
+.ob-projectile[data-elemental="2"],
+.ob-projectile[data-elemental="2"]:before,
+.ob-projectile[data-elemental="2"]:after {
   background-color: red;
 }
 
-.ob-projectile[data-elemental="3"] {
+.ob-projectile[data-elemental="3"],
+.ob-projectile[data-elemental="3"]:before,
+.ob-projectile[data-elemental="3"]:after {
   background-color: blue;
 }
 
 /* status effects */
 
-.ob-projectile[data-direction="S"] {}
-
 .ob-projectile[data-impact^="0"] {}
+
+.ob-projectile[data-impact^="0"][data-direction="N"]:before,
+.ob-projectile[data-impact^="0"][data-direction="N"]:after {
+  animation-name: vapourtrail_N;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="NE"]:before,
+.ob-projectile[data-impact^="0"][data-direction="NE"]:after {
+  animation-name: vapourtrail_NE;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="E"]:before,
+.ob-projectile[data-impact^="0"][data-direction="E"]:after {
+  animation-name: vapourtrail_E;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="SE"]:before,
+.ob-projectile[data-impact^="0"][data-direction="SE"]:after {
+  animation-name: vapourtrail_SE;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="S"]:before,
+.ob-projectile[data-impact^="0"][data-direction="S"]:after {
+  animation-name: vapourtrail_S;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="SW"]:before,
+.ob-projectile[data-impact^="0"][data-direction="SW"]:after {
+  animation-name: vapourtrail_SW;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="W"]:before,
+.ob-projectile[data-impact^="0"][data-direction="W"]:after {
+  animation-name: vapourtrail_W;
+}
+
+.ob-projectile[data-impact^="0"][data-direction="NW"]:before,
+.ob-projectile[data-impact^="0"][data-direction="NW"]:after {
+  animation-name: vapourtrail_NW;
+}
+
+/* vapour trail */
+
+@keyframes vapourtrail_N {
+  0% { opacity: 0.7; transform: translate3d(0, 100%, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(0, 500%, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_NE {
+  0% { opacity: 0.7; transform: translate3d(-70%, 70%, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(-350%, 350%, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_E {
+  0% { opacity: 0.7; transform: translate3d(-100%, 0, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(-500%, 0, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_SE {
+  0% { opacity: 0.7; transform: translate3d(-70%, -70%, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(-350%, -350%, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_S {
+  0% { opacity: 0.7; transform: translate3d(0, -100%, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(0, -500%, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_SW {
+  0% { opacity: 0.7; transform: translate3d(70%, -70%, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(350%, -350%, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_W {
+  0% { opacity: 0.7; transform: translate3d(100%, 0, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(500%, 0, 0) scale3d(5, 5, 5); }
+}
+
+@keyframes vapourtrail_NW {
+  0% { opacity: 0.7; transform: translate3d(70%, 70%, 0) scale3d(1, 1, 1); }
+  100% { opacity: 0; transform: translate3d(350%, 350%, 0) scale3d(5, 5, 5); }
+}
+

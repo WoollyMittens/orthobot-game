@@ -82,6 +82,10 @@
 	background-image: linear-gradient(90deg, red 0%, red 11%, transparent 11%);
 }
 
+.ob-bot[data-health^="0"] {
+	border: solid 4px black;
+}
+
 .ob-bot[data-health^="0"]:before {
 	display: none;
 }
