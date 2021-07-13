@@ -104,6 +104,8 @@ export class Tile {
 		switch (this.type) {
 			case "alarm": break;
 			case "switch": break;
+			case "trigger": break;
+			case "objective": break;
 			case "wall": break;
 			case "gap": break;
 			case "gate": break;
