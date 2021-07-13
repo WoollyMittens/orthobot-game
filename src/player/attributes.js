@@ -16,7 +16,8 @@ export const attributes = {
 		"weapon": 1,
 		"reeling": 0,
 		"shooting": 0,
-		"elemental": 0
+		"elemental": 0,
+		"airborne": false
 	},
 	"a": {
 		"regen": 1,

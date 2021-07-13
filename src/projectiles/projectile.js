@@ -1,3 +1,7 @@
+import {
+	attributes
+} from "./attributes.js";
+
 export class Projectile {
 	constructor(scope, origin) {
 		// expose the scope
@@ -13,9 +17,16 @@ export class Projectile {
 		this.direction = origin.direction;
 		this.elemental = origin.elemental;
 		this.weapon = origin.weapon;
-		this.active = true;
-		this.impact = 0;
 		this.scope.background.add(this.element);
+		// common properties
+		for (var key in attributes["common"]) {
+			this[key] = attributes["common"][key];
+		}
+		// specific properties
+		this.variant = origin.variant;
+		for (var key in attributes[this.variant]) {
+			this[key] = attributes[this.variant][key];
+		}
 		// apply the offset to the starting position
 		if (/N/.test(this.direction)) { this.y -= this.offset; }
 		else if (/S/.test(this.direction)) { this.y += this.offset; }
@@ -48,6 +59,14 @@ export class Projectile {
 
 	set elemental(value) {
 		this.element.setAttribute("data-elemental", value);
+	}
+
+	get variant() {
+		return this.element.getAttribute("data-elemental");
+	}
+
+	set variant(value) {
+		this.element.setAttribute("data-variant", value);
 	}
 
 	get position() {

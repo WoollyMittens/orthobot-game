@@ -5,7 +5,8 @@ export const attributes = {
 		"vertical": 0,
 		"health": 9,
 		"shooting": 0,
-		"colliding": ""
+		"colliding": "",
+		"airborne": false
 	},
 	"a": {
 		"direction": "S",

@@ -357,7 +357,7 @@ export class Bot {
 			// increase the light levels along the way
 			this.scope.map.illuminate(col, row, this.range - a);
 			// don't scan through walls
-			if (!this.scope.map.passage(col, row)) break;
+			if (!this.scope.map.passage(col, row, this)) break;
 			// if player in way, change to hunt mode
 			if (col === this.scope.player.col && row === this.scope.player.row) next.patrol = "hunt";
 		}

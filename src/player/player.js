@@ -213,40 +213,24 @@ export class Player {
 		// correct the movement for map collisions
 		const colchange = (next.col !== current.col);
 		const rowchange = (next.row !== current.row);
-		var condition = true;
-		if (colchange || rowchange) {
-			// select the entered tile
-			var tile = this.scope.map.select(next.col, next.row);
-			// pick a way to deal with this tile
-			switch (tile.type) {
-				case "alarm":
-				case "switch":
-				case "gap":
-				case "wall":
-					condition = false;
-					break;
-				case "gate":
-					condition = (this.elemental === tile.elemental);
-					break;
-				case "exit":
-				case "bridge":
-				case "door":
-					condition = (tile.value === "open");
-					break;
+		// if a new tile has been entered, check if this tile can be traversed
+		if (
+			(colchange || rowchange) &&
+			!this.scope.map.passage(next.col, next.row, this)
+		) {
+			// don't allow getting closer
+			if (colchange) {
+				// halt the movement
+				next.x = current.x;
+				next.col = current.col;
+				next.horizontal = -next.horizontal;
 			}
-		}
-		// or correct the movement
-		if (!condition && colchange) {
-			// halt the movement
-			next.x = current.x;
-			next.col = current.col;
-			next.horizontal = -next.horizontal;
-		}
-		if (!condition && rowchange) {
-			// halt the movement
-			next.y = current.y;
-			next.row = current.row;
-			next.vertical = -next.vertical;
+			if (rowchange) {
+				// halt the movement
+				next.y = current.y;
+				next.row = current.row;
+				next.vertical = -next.vertical;
+			}
 		}
 	}
 
