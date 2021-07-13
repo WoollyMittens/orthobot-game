@@ -1,7 +1,7 @@
 export const attributes = {
 	"common": {
 		"light": 0,
-		"interacted": null,
+		"interaction": null,
 		"illumination": 0,
 		"occupants": 0
 	},

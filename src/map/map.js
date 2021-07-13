@@ -27,7 +27,7 @@ export class Map {
 		// select the tile from the collection
 		const tile = this.select(col, row);
 		// accumulate the intensity of all light sources this updates
-		tile.interacted = elemental;
+		tile.interaction = elemental;
 	}
 
 	occupy = function (col, row) {

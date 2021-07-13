@@ -96,13 +96,10 @@ export class Tile {
 	}
 
 	conditions = function () {
-		// if the tile gets occupied
+		// check for new interactions
 		const occupied = (this.previous?.occupants === 0 && this.occupants > 0);
 		const vacated = (this.previous?.occupants > 0 && this.occupants === 0);
-		// if the tile gets interacted
-		if (this.interacted !== null) {
-			this.scope.interface.log = ["interacted with tile:", this.col, this.row, this.interacted]
-		}
+		const interacted = (this.interaction !== null);
 		// decide which rules to follow
 		switch (this.type) {
 			case "alarm": break;
@@ -115,9 +112,9 @@ export class Tile {
 			case "door": break;
 			default: break;
 		}
-		// update the interaction
-		this.interacted = null;
+		// reset the interactions
 		this.previous.occupants = this.occupants;
+		this.interaction = null;
 	}
 
 	update = function (interval) {
