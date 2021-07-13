@@ -23,6 +23,27 @@ export class Map {
 		tile.illumination += intensity;
 	}
 
+	interact = function (col, row, elemental) {
+		// select the tile from the collection
+		const tile = this.select(col, row);
+		// accumulate the intensity of all light sources this updates
+		tile.interacted = elemental;
+	}
+
+	occupy = function (col, row) {
+		// select the tile from the collection
+		const tile = this.select(col, row);
+		// increase the reported occupants
+		tile.occupants += 1;
+	}
+
+	vacate = function (col, row) {
+		// select the tile from the collection
+		const tile = this.select(col, row);
+		// decrease the reported occupants
+		tile.occupants = Math.max(tile.occupants + 1, 0);
+	}
+
 	passage = function (col, row, entity) {
 		// if the coordinates are out of bounds, deny passage
 		if (col < 0 || row < 0 || col > this.scope.model.colcount || row > this.scope.model.rowcount) return false;

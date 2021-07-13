@@ -145,8 +145,12 @@ export class Projectile {
 			(colchange || rowchange) &&
 			!this.scope.map.passage(next.col, next.row, this)
 		) {
-			// note the collision
+			// animate the impact
 			next.impact = 9;
+			// note a collision from below
+			if (/N/.test(this.direction)) {
+				this.scope.map.interact(next.col, next.row, this.elemental);
+			}
 			// don't allow getting closer
 			if (colchange) {
 				// halt the movement

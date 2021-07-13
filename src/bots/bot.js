@@ -342,6 +342,15 @@ export class Bot {
 		}
 	}
 
+	location = function (current, next) {
+		// if there was a tile change
+		if (next.col !== current.col || next.row !== current.row) {
+			// report occupying the tile
+			this.scope.map.vacate(current.col, current.row); 
+			this.scope.map.occupy(next.col, next.row);
+		}
+	}
+
 	scan = function (next, interval) {
 		// scan ahead to the configured distance
 		var addcol = 0, addrow = 0;
@@ -367,7 +376,6 @@ export class Bot {
 		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
 		const rps = (elemental - this.elemental + 4) % 3;
 		const hit = (elemental > 0) ? weapon + weapon * rps : weapon + weapon;
-		this.scope.interface.log = ["bot hit for", hit];
 		this.health = Math.max(this.health - hit / this.armor, 0);
 	}
 
@@ -392,6 +400,9 @@ export class Bot {
 
 		// follow the patrol rules
 		this.navigation(current, next);
+
+		// report tile events
+		this.location(current, next);
 
 		// scan ahead
 		this.scan(next, interval);

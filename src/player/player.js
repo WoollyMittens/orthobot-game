@@ -193,13 +193,11 @@ export class Player {
 		// or if the button is held
 		else if (current.primary) {
 			// TODO: extend the reel
-			this.scope.interface.log = ["button held for", new Date().getTime() - current.primary];
 		} 
 		// of if the button it tapped
 		else if (this.previous.primary && !current.primary) {
 			// if the button press was short enough
 			const duration = new Date().getTime() - this.previous.primary;
-			this.scope.interface.log = ["button let go after", duration];
 			if (current.shooting < 1 && duration < 250) {
 				// set shooting to 9 if 0
 				next.shooting = 9;
@@ -265,6 +263,15 @@ export class Player {
 		}
 	}
 
+	location = function (current, next) {
+		// if there was a tile change
+		if (next.col !== current.col || next.row !== current.row) {
+			// report occupying the tile
+			this.scope.map.vacate(current.col, current.row); 
+			this.scope.map.occupy(next.col, next.row);
+		}
+	}
+
 	scan = function (interval) {
 		// highlight ahead
 		var addcol = 0, addrow = 0;
@@ -289,7 +296,6 @@ export class Player {
 		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
 		const rps = (elemental - this.elemental + 4) % 3;
 		const hit = (this.elemental > 0) ? weapon + weapon * rps : weapon + weapon;
-		this.scope.interface.log = ["player hit for", hit];
 		this.health = Math.max(this.health - hit / this.armor, 0);
 	}
 
@@ -315,6 +321,9 @@ export class Player {
 
 		// check for collisions with the bots
 		this.inhabitants(current, next);
+
+		// report tile events
+		this.location(current, next);
 
 		// scan ahead
 		this.scan(interval);

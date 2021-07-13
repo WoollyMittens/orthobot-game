@@ -1,8 +1,9 @@
 export const attributes = {
 	"common": {
 		"light": 0,
-		"occupied": "",
-		"interacted": ""
+		"interacted": null,
+		"illumination": 0,
+		"occupants": 0
 	},
 	// wall
 	"A": {

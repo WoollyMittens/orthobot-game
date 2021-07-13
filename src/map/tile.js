@@ -6,6 +6,7 @@ export class Tile {
 	constructor(scope, matrix, char, index) {
 		// expose the model
 		this.scope = scope;
+		this.previous = {};
 		// create the tile objects
 		this.element = document.createElement("div");
 		this.element.className = "ob-tile";
@@ -17,7 +18,6 @@ export class Tile {
 		this.x = col * scope.model.gridsize;
 		this.y = row * scope.model.gridsize * scope.model.foreshorten;
 		this.z = this.y + 1;
-		this.illumination = 0;
 		// common properties
 		for (var key in attributes["common"]) {
 			this[key] = attributes["common"][key];
@@ -95,11 +95,37 @@ export class Tile {
 		});
 	}
 
+	conditions = function () {
+		// if the tile gets occupied
+		const occupied = (this.previous?.occupants === 0 && this.occupants > 0);
+		const vacated = (this.previous?.occupants > 0 && this.occupants === 0);
+		// if the tile gets interacted
+		if (this.interacted !== null) {
+			this.scope.interface.log = ["interacted with tile:", this.col, this.row, this.interacted]
+		}
+		// decide which rules to follow
+		switch (this.type) {
+			case "alarm": break;
+			case "switch": break;
+			case "wall": break;
+			case "gap": break;
+			case "gate": break;
+			case "exit": break;
+			case "bridge": break;
+			case "door": break;
+			default: break;
+		}
+		// update the interaction
+		this.interacted = null;
+		this.previous.occupants = this.occupants;
+	}
+
 	update = function (interval) {
 		// apply the light effects
 		this.lighting(interval);
 
 		// check if any conditions have been met
+		this.conditions(interval);
 
 		// render all bots
 		this.render();
