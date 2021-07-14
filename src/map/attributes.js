@@ -25,23 +25,23 @@ export const attributes = {
 	"E": {
 		"type": "door",
 		"watch": "G",
-		"value": "closed"
+		"status": "closed"
 	},
 	// wall switch - TODO: query all switches, if marked as interacted, toggle the value
 	"F": {
 		"type": "switch",
-		"value": "off"
+		"status": "off"
 	},
 	// floor trigger - TODO: query all triggers, if occupied, set the value
 	"G": {
 		"type": "trigger",
-		"value": "off"
+		"status": "off"
 	},
 	// alarm - TODO: if the alarms are active switch all bots to hunt mode. open guard doors. close blast doors
 	"H": {
 		"type": "alarm",
 		"watch": "X",
-		"value": "off"
+		"status": "off"
 	},
 	// void - TODO: player and bots can't traverse, but projectiles can
 	"I": {
@@ -50,12 +50,23 @@ export const attributes = {
 	// bridge
 	"J": {
 		"type": "bridge",
-		"value": "closed"
+		"watch": "F",
+		"status": "closed"
+	},
+	// evacuation doors
+	"K": {
+		"type": "escape",
+		"status": "closed"
+	},
+	// alarm bariers
+	"L": {
+		"type": "barrier",
+		"status": "open"
 	},
 	// objective
 	"X": {
 		"type": "objective",
-		"value": "off"
+		"status": "off"
 	},
 	// start
 	"Y": {
@@ -65,6 +76,6 @@ export const attributes = {
 	"Z": {
 		"type": "exit",
 		"watch": "X",
-		"value": "closed"
+		"status": "closed"
 	}
 }

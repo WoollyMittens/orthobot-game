@@ -4,9 +4,10 @@ import {
 
 export class Tile {
 	constructor(scope, matrix, char, index) {
-		// expose the model
+		// expose the scope
 		this.scope = scope;
 		this.previous = {};
+		this.watched = null;
 		// create the tile objects
 		this.element = document.createElement("div");
 		this.element.className = "ob-tile";
@@ -47,6 +48,14 @@ export class Tile {
 		this.element.setAttribute("data-variant", value);
 	}
 
+	get status() {
+		return this.element.getAttribute("data-status");
+	}
+
+	set status(value) {
+		this.element.setAttribute("data-status", value);
+	}
+
 	get col() {
 		return +this.element.getAttribute("data-col");
 	}
@@ -69,6 +78,13 @@ export class Tile {
 
 	set light(value) {
 		this.element.setAttribute("data-light", value.toFixed(3));
+	}
+
+	watching = function () {
+		// fetch the observed elements, but only once
+		if (this?.watch && this.watched === null) {
+			this.watched = this.scope.map.filter("variant", this.watch);
+		};
 	}
 
 	lighting = function (interval) {
@@ -102,16 +118,42 @@ export class Tile {
 		const interacted = (this.interaction !== null);
 		// decide which rules to follow
 		switch (this.type) {
-			case "alarm": break;
-			case "switch": break;
-			case "trigger": break;
-			case "objective": break;
-			case "wall": break;
-			case "gap": break;
-			case "gate": break;
-			case "exit": break;
-			case "bridge": break;
-			case "door": break;
+			case "alarm": 
+				// if the objectives are activated
+					// turn on the alarm
+					// set the global alarm
+					// this.scope.background.alarm = "on";
+				break;
+			case "switch": 
+				// if interaction was reported
+					// toggle the status
+				break;
+			case "trigger": 
+				// if the tile is occupied
+					// set the status
+				break;
+			case "objective": 
+				// if the tile is occupied by the player
+					// set the status
+				// or if the occupant is a bot
+					// reset the status
+				break;
+			case "escape":
+				// if the global alarm is on
+					// open the door
+				break;
+			case "barrier":
+				// if the global alarm is on
+					// close the barrier
+				break;
+			case "exit":
+			case "bridge":
+			case "door":
+				// if the connected switches have been activated
+					// open the tile
+				// else
+					// close the tile
+				break;
 			default: break;
 		}
 		// reset the interactions
@@ -120,6 +162,9 @@ export class Tile {
 	}
 
 	update = function (interval) {
+		// populate the watched tiles
+		this.watching();
+
 		// apply the light effects
 		this.lighting(interval);
 

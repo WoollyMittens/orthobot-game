@@ -6,6 +6,7 @@ export class Background {
 		// create a background object at the right dimensions
 		this.element = document.createElement("div");
 		this.element.className = "ob-background";
+		this.alarm = "off";
 		this.x = 0;
 		this.y = 0;
 		Object.assign(this.element.style, {
@@ -34,6 +35,16 @@ export class Background {
 	set row(value) {
 		// update the value of the dom element
 		this.element.setAttribute("data-row", value);
+	}
+
+	get alarm() {
+		// return the value stored in the dom element
+		return this.element.getAttribute("data-alarm");
+	}
+
+	set alarm(value) {
+		// update the value of the dom element
+		this.element.setAttribute("data-alarm", value);
 	}
 
 	add = function (child) {

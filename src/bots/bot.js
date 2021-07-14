@@ -160,7 +160,8 @@ export class Bot {
 	movement = function (current, interval) {
 		var next = { ...current };
 		// pick the patrol speed
-		var patrolspeed = (/hunt|flee/.test(current.patrol)) ? current.topspeed : current.topspeed / 2;
+		const alarmed = (/hunt|flee/.test(current.patrol) || this.scope.background.alarm === "on");
+		const patrolspeed = alarmed ? current.topspeed : current.topspeed / 2;
 		// apply the deceleration
 		next.horizontal = current.horizontal / (1 + interval * this.model.actuation);
 		next.vertical = current.vertical / (1 + interval * this.model.actuation);
@@ -298,6 +299,7 @@ export class Bot {
 					if (/W/.test(current.direction)) { next.direction = "E"; }
 					else if (/E/.test(current.direction)) { next.direction = "W"; }
 					break;
+				case "flee":
 				case "roam":
 					let directions = ["N", "E", "S", "W"];
 					next.direction = directions[parseInt(Math.random() * directions.length)];
@@ -307,7 +309,7 @@ export class Bot {
 			next.colliding = "";
 		}
 		// if in hunt mode check for line of sight to player and adjust direction / shooting
-		if (current.patrol === "hunt") {
+		if (/hunt|flee/.test(current.patrol)) {
 			// if the target is close enough
 			let x = this.scope.player.x - this.x;
 			let y = this.scope.player.y - this.y;
@@ -323,6 +325,7 @@ export class Bot {
 				else if (direction < -1.178 && direction > -1.963) { next.direction = "W"; }
 				else if (direction < -1.963 && direction > -2.749) { next.direction = "NW"; }
 				else { next.direction = "N"; }
+				// TODO: if fleeing, reverse the direction and skip the rest
 				// keep some distance
 				if (distance < this.model.gridsize) {
 					next.x = current.x;
@@ -368,12 +371,13 @@ export class Bot {
 			// don't scan through walls
 			if (!this.scope.map.passage(col, row, this)) break;
 			// if player in way, change to hunt mode
+			// TODO: if the player is overpowered switch to flee instead of hunt
 			if (col === this.scope.player.col && row === this.scope.player.row) next.patrol = "hunt";
 		}
 	}
 
 	damage = function(weapon, elemental) {
-		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
+		// rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
 		const rps = (elemental - this.elemental + 4) % 3;
 		const hit = (elemental > 0) ? weapon + weapon * rps : weapon + weapon;
 		this.health = Math.max(this.health - hit / this.armor, 0);

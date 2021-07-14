@@ -143,6 +143,27 @@ export class Player {
 		this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, ${this.y}px)`;
 	}
 
+	cutscene = function (current) {
+		// if health is depleted
+		if (current.health <= 0) {
+			// TODO: show the kill screen
+			// skip the rest
+			return true;
+		}
+
+		// TODO: if the entrance has not completed
+			// drop the player onto the entrance tile
+			// skip the rest
+
+		// TODO: if the exit is open
+			// lower the player into the exit
+			// change the level
+			// skip the rest
+
+		// or don't interrupt
+		return false;
+	}
+
 	movement = function (current, interval) {
 		var next = {...current};
 		// apply the deceleration
@@ -293,7 +314,7 @@ export class Player {
 	}
 
 	damage = function(weapon, elemental) {
-		// TODO: rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
+		// rock/paper/scissor damage calculation - f(a[1,2,3],b[1,2,3]) = (a-b+4)%3 = 0,1,2 = lose,draw,win = green,red,blue
 		const rps = (elemental - this.elemental + 4) % 3;
 		const hit = (this.elemental > 0) ? weapon + weapon * rps : weapon + weapon;
 		this.health = Math.max(this.health - hit / this.armor, 0);
@@ -303,12 +324,8 @@ export class Player {
 		// fetch the current position
 		var current = this.position;
 
-		// if health is depleted
-		if (current.health <= 0) {
-			// TODO: show the kill screen
-			// don't continue
-			return;
-		}
+		// skip the rest if a cutscene is happening
+		if (this.cutscene(current)) return;
 
 		// calculate the new position
 		var next = this.movement(current, interval);

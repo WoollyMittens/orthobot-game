@@ -16,6 +16,15 @@ export class Map {
 		return this.matrix[row][col];
 	}
 
+	filter = function (key, value) {
+		// return tiles that meet the criteria
+		var filtered = [];
+		for (let tile of this.collection) {
+			if (tile[key] === value) filtered.push(tile);
+		}
+		return filtered;
+	}
+
 	illuminate = function (col, row, intensity) {
 		// select the tile from the collection
 		const tile = this.select(col, row);
