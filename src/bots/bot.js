@@ -212,6 +212,7 @@ export class Bot {
 	}
 
 	environment = function (current, next) {
+		// TODO: arrested bots don't have to check for collisions
 		// correct the movement for map collisions
 		var colchange = (next.col !== current.col);
 		var rowchange = (next.row !== current.row);
@@ -239,6 +240,7 @@ export class Bot {
 	}
 
 	inhabitants = function (current, next) {
+		// TODO: arrested bots don't have to check for collisions
 		// gather all entities
 		var entities = [this.scope.player, ...this.scope.bots.collection];
 		// check for all bots
@@ -381,6 +383,11 @@ export class Bot {
 		const rps = (elemental - this.elemental + 4) % 3;
 		const hit = (elemental > 0) ? weapon + weapon * rps : weapon + weapon;
 		this.health = Math.max(this.health - hit / this.armor, 0);
+	}
+
+	arrest = function() {
+		// set the accelleration to 0
+		// set the bot to hunt mode
 	}
 
 	update = function (interval) {

@@ -213,8 +213,16 @@ export class Player {
 		} 
 		// or if the button is held
 		else if (current.primary) {
-			// TODO: extend the reel
-			// TODO: arrest movement
+			// extend the reel
+			this.scope.reel.extend(current);
+			// arrest movement
+			next.direction = current.direction;
+			next.x = current.x;
+			next.y = current.y;
+			next.col = current.col;
+			next.row = current.row;
+			next.horizontal = 0;
+			next.vertical = 0;
 		} 
 		// of if the button it tapped
 		else if (this.previous.primary && !current.primary) {
@@ -230,6 +238,7 @@ export class Player {
 	}
 
 	environment = function (current, next) {
+		// TODO: reeling player doesn't have to check for environmental collisions
 		// correct the movement for map collisions
 		const colchange = (next.col !== current.col);
 		const rowchange = (next.row !== current.row);
@@ -268,6 +277,7 @@ export class Player {
 			let leftof = next.x + current.radius < bx - br;
 			// in case of collision
 			if (!(leftof || rightof || above || below)) {
+				// TODO: colliding with a hooked bot will start a takeover
 				// allow traversing disabled bots
 				if (bot.health <= 0) break;
 				// don't allow getting closer
