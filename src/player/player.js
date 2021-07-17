@@ -214,6 +214,7 @@ export class Player {
 		// or if the button is held
 		else if (current.primary) {
 			// TODO: extend the reel
+			// TODO: arrest movement
 		} 
 		// of if the button it tapped
 		else if (this.previous.primary && !current.primary) {

@@ -19,6 +19,9 @@ import {
 	Player
 } from "./player/player.js";
 import {
+	Reel
+} from "./reel/reel.js";
+import {
 	Projectiles
 } from "./projectiles/projectiles.js";
 import {
@@ -54,6 +57,7 @@ class OrthoBot {
 		this.map = new Map(this);
 		this.bots = new Bots(this);
 		this.player = new Player(this);
+		this.reel = new Reel(this);
 		this.projectiles = new Projectiles(this);
 		this.controls = new Controls(this);
 		this.sounds = new Sounds(this);
@@ -82,6 +86,7 @@ class OrthoBot {
 		this.map.update(interval);
 		this.bots.update(interval);
 		this.player.update(interval);
+		this.reel.update(interval);
 		this.projectiles.update(interval);
 		this.sounds.update(interval);
 		// request the next redraw
