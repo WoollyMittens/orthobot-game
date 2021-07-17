@@ -9,6 +9,10 @@ export class Reel {
 		// mark the reel as extending
 	}
 
+	retract = function () {
+		// mark the reel as retracting
+	}
+
 	update = function (interval) {
 		// TODO: extend or retract the reel
 		// if the reel is marked as extending

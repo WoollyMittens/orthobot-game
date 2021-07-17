@@ -226,6 +226,8 @@ export class Player {
 		} 
 		// of if the button it tapped
 		else if (this.previous.primary && !current.primary) {
+			// retract the reel
+			this.scope.reel.retract(current);
 			// if the button press was short enough
 			const duration = new Date().getTime() - this.previous.primary;
 			if (current.shooting < 1 && duration < 250) {
