@@ -129,11 +129,8 @@ export class Tile {
 					// toggle the status
 				break;
 			case "trigger": 
-				// if the tile is occupied
-				if (occupied) {
-					// toggle the status
-					this.status = (/on/.test(this.status)) ? "off" : "on";
-				}
+				// toggle the status if the tile is occupied
+				if (occupied) this.status = (/on/.test(this.status)) ? "off" : "on";
 				break;
 			case "objective": 
 				// if the tile is occupied by the player
