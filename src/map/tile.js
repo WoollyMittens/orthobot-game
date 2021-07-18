@@ -130,7 +130,10 @@ export class Tile {
 				break;
 			case "trigger": 
 				// if the tile is occupied
-					// set the status
+				if (occupied) {
+					// toggle the status
+					this.status = (/on/.test(this.status)) ? "off" : "on";
+				}
 				break;
 			case "objective": 
 				// if the tile is occupied by the player
@@ -149,10 +152,11 @@ export class Tile {
 			case "exit":
 			case "bridge":
 			case "door":
-				// if the connected switches have been activated
-					// open the tile
-				// else
-					// close the tile
+				// check the watched switches
+				let connected = this.scope.map.filter("variant", this.watch);
+				let activated = connected.reduce((total, current) => total && current.status === "on", true);
+				// open or close the tile
+				this.status = (activated) ? "open" : "closed";
 				break;
 			default: break;
 		}

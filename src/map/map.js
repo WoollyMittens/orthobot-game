@@ -50,7 +50,7 @@ export class Map {
 		// select the tile from the collection
 		const tile = this.select(col, row);
 		// decrease the reported occupants
-		tile.occupants = Math.max(tile.occupants + 1, 0);
+		tile.occupants = Math.max(tile.occupants - 1, 0);
 	}
 
 	passage = function (col, row, entity) {
@@ -67,7 +67,7 @@ export class Map {
 			case "gate": return (tile.elemental === entity.elemental);
 			case "exit":
 			case "bridge":
-			case "door": return (tile.value === "open");
+			case "door": return (tile.status === "open");
 			default: return true;
 		}
 	}

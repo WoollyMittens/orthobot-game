@@ -17,6 +17,7 @@ export class Projectile {
 		this.direction = origin.direction;
 		this.elemental = origin.elemental;
 		this.weapon = origin.weapon;
+		this.lifespan = 0;
 		this.scope.background.add(this.element);
 		// common properties
 		for (var key in attributes["common"]) {
@@ -142,7 +143,7 @@ export class Projectile {
 		var rowchange = (next.row !== current.row);
 		// if a new tile has been entered, check if this tile can be traversed
 		if (
-			(colchange || rowchange) &&
+			(this.lifespan === 0 || colchange || rowchange) &&
 			!this.scope.map.passage(next.col, next.row, this)
 		) {
 			// animate the impact
@@ -236,6 +237,9 @@ export class Projectile {
 
 			// check for collisions with the bots
 			this.inhabitants(current, next);
+
+			// update the lifespan
+			this.lifespan += interval;
 
 			// apply the new position
 			this.position = next;

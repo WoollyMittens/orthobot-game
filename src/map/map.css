@@ -67,6 +67,30 @@
 	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, magenta 25%);
 }
 
+/* door */
+
+[data-variant="E"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 15%, crimson 15%, crimson 35%, maroon 35%, maroon 85%, teal 85%);
+}
+
+[data-variant="E"][data-status="closed"]:after {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 15%, #000 15%);
+}
+
+[data-variant="E"][data-status="open"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, teal 25%, teal 65%, maroon 65%, maroon 85%, teal 85%);
+}
+
+/* floor trigger */
+
+[data-variant="G"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, green 25%);
+}
+
+[data-variant="G"][data-status="on"] {
+	background-image: linear-gradient(180deg, transparent 0%, transparent 25%, olivedsdw 25%);
+}
+
 /* entrance */
 
 [data-variant="Y"] {
