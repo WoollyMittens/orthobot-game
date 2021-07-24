@@ -216,7 +216,6 @@ export class Player {
 			// if the button was pressed long enough
 			const duration = new Date().getTime() - this.previous.primary;
 			if (duration > 250) {
-				this.scope.interface.log = duration;
 				// extend the reel
 				this.scope.reel.extend(current);
 				// arrest movement
