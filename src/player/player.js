@@ -212,19 +212,24 @@ export class Player {
 			next.shooting = Math.max(current.shooting - interval * this.cooldown * 2, 0);
 		} 
 		// or if the button is held
-		else if (current.primary) {
-			// extend the reel
-			this.scope.reel.extend(current);
-			// arrest movement
-			next.direction = current.direction;
-			next.x = current.x;
-			next.y = current.y;
-			next.col = current.col;
-			next.row = current.row;
-			next.horizontal = 0;
-			next.vertical = 0;
+		else if (this.previous.primary && current.primary) {
+			// if the button was pressed long enough
+			const duration = new Date().getTime() - this.previous.primary;
+			if (duration > 250) {
+				this.scope.interface.log = duration;
+				// extend the reel
+				this.scope.reel.extend(current);
+				// arrest movement
+				next.direction = current.direction;
+				next.x = current.x;
+				next.y = current.y;
+				next.col = current.col;
+				next.row = current.row;
+				next.horizontal = 0;
+				next.vertical = 0;
+			}
 		} 
-		// of if the button it tapped
+		// or if the button it tapped
 		else if (this.previous.primary && !current.primary) {
 			// retract the reel
 			this.scope.reel.retract(current);

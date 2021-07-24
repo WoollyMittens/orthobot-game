@@ -7,10 +7,12 @@ export class Reel {
 	extend = function (coordinates) {
 		// establish the origin
 		// mark the reel as extending
+		console.log("extend reel");
 	}
 
 	retract = function () {
 		// mark the reel as retracting
+		console.log("retract reel");
 	}
 
 	update = function (interval) {
