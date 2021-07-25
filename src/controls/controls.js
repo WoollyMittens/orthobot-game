@@ -35,6 +35,7 @@ export class Controls {
 
 	update = function () {
 		// wait for key jitter
+		// TODO: keyrepeat locks this up?
 		clearTimeout(this.delay);
 		this.delay = setTimeout(() => {
 			// if there is any direction input
@@ -59,13 +60,16 @@ export class Controls {
 			}
 			// register the primary input
 			if (this.vectors.primary) {
-				this.scope.player.primary = new Date().getTime();
+				// counter should not reset when other buttons are pressed
+				if (!this.scope.player.primary) this.scope.player.primary = new Date().getTime();
 			} else {
 				this.scope.player.primary = 0;
 			}
 			// register the secondary input
 			if (this.vectors.secondary) {
-				this.scope.player.secondary = new Date().getTime();
+				// counter should not reset when other buttons are pressed
+				this.scope.player.hassecondary = true;
+				if (!this.scope.player.secondary) this.scope.player.secondary = new Date().getTime();
 			} else {
 				this.scope.player.secondary = 0;
 			}

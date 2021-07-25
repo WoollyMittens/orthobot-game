@@ -228,13 +228,22 @@ export class Player {
 				next.vertical = 0;
 			}
 		} 
-		// or if the button it tapped
+		// or if the secondary button is used
+		else if (this.previous.secondary && current.secondary) {
+			if (current.shooting < 1) {
+				// set shooting to 9 if 0
+				next.shooting = 9;
+				// launch a projectile
+				this.scope.projectiles.add(this);
+			}
+		}
+		// or if the primary button is tapped
 		else if (this.previous.primary && !current.primary) {
 			// retract the reel
 			this.scope.reel.retract(current);
-			// if the button press was short enough
+			// if the button press was short enough (but only is the secondary button is not used)
 			const duration = new Date().getTime() - this.previous.primary;
-			if (current.shooting < 1 && duration < 250) {
+			if (current.shooting < 1 && duration < 250 && !this.hassecondary) {
 				// set shooting to 9 if 0
 				next.shooting = 9;
 				// launch a projectile

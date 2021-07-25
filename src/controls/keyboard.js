@@ -7,9 +7,10 @@ export class Keyboard {
 	}
 
 	onPressed = function (evt) {
-		evt.preventDefault();
+		// ignore keyrepeat
+		if (evt.repeat) return;
 		// check for keyboard input
-		switch (evt.key) {
+		switch (evt.key.toLowerCase()) {
 			case "w":
 				this.vectors.north = true;
 				break;
@@ -25,6 +26,9 @@ export class Keyboard {
 			case " ":
 				this.vectors.primary = true;
 				break;
+			case "shift":
+				this.vectors.secondary = true;
+				break;
 		}
 		// update the attributes
 		this.update();
@@ -33,7 +37,7 @@ export class Keyboard {
 	onReleased = function (evt) {
 		evt.preventDefault();
 		// check for keyboard input
-		switch (evt.key) {
+		switch (evt.key.toLowerCase()) {
 			case "w":
 				this.vectors.north = false;
 				break;
@@ -48,6 +52,9 @@ export class Keyboard {
 				break;
 			case " ":
 				this.vectors.primary = false;
+				break;
+			case "shift":
+				this.vectors.secondary = false;
 				break;
 		}
 		// update the attributes

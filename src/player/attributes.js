@@ -5,6 +5,7 @@ export const attributes = {
 		"acceleration": 0,
 		"primary": 0,
 		"secondary": 0,
+		"hassecondary": false,
 		"horizontal": 0,
 		"vertical": 0,
 		"topspeed": 128,
