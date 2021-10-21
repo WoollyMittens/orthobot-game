@@ -43,12 +43,20 @@ export class Player {
 		this.element.setAttribute("data-acceleration", value);
 	}
 
-	get direction() {
-		return this.element.getAttribute("data-direction");
+	get bearing() {
+		return this.element.getAttribute("data-bearing");
 	}
 
-	set direction(value) {
-		this.element.setAttribute("data-direction", value);
+	set bearing(value) {
+		this.element.setAttribute("data-bearing", value);
+	}
+
+	get heading() {
+		return this.element.getAttribute("data-heading");
+	}
+
+	set heading(value) {
+		this.element.setAttribute("data-heading", value);
 	}
 
 	get reeling() {
@@ -107,8 +115,10 @@ export class Player {
 		// return all positional data as one object
 		return {
 			"acceleration": this.acceleration,
-			"direction": this.direction,
+			"heading": this.heading,
+			"bearing": this.bearing,
 			"shooting": this.shooting,
+			"reeling": this.reeling,
 			"primary": this.primary,
 			"secondary": this.secondary,
 			"health": this.health,
@@ -128,7 +138,9 @@ export class Player {
 		// remember for the next iteration
 		this.previous = {...data};
 		// update only mutable properties
+		this.heading = data.heading;
 		this.shooting = data.shooting;
+		this.reeling = data.reeling;
 		this.health = data.health;
 		this.horizontal = data.horizontal;
 		this.vertical = data.vertical;
@@ -170,23 +182,23 @@ export class Player {
 		next.horizontal = current.horizontal / (1 + interval * this.model.actuation);
 		next.vertical = current.vertical / (1 + interval * this.model.actuation);
 		// apply the acceleration
-		if (/E/.test(current.direction)) {
+		if (/E/.test(current.bearing)) {
 			next.horizontal = Math.min(
 				next.horizontal + current.acceleration * interval,
 				current.topspeed
 			)
-		} else if (/W/.test(current.direction)) {
+		} else if (/W/.test(current.bearing)) {
 			next.horizontal = Math.max(
 				next.horizontal - current.acceleration * interval,
 				-current.topspeed
 			)
 		}
-		if (/S/.test(current.direction)) {
+		if (/S/.test(current.bearing)) {
 			next.vertical = Math.min(
 				next.vertical + current.acceleration * interval,
 				current.topspeed
 			)
-		} else if (/N/.test(current.direction)) {
+		} else if (/N/.test(current.bearing)) {
 			next.vertical = Math.max(
 				next.vertical - current.acceleration * interval,
 				-current.topspeed
@@ -202,8 +214,9 @@ export class Player {
 	}
 
 	animate = function (current, next, interval) {
+		var arrested = false;
 		// apply the health regen
-		if (current.health < 9) {
+		if (current.health > 0 && current.health < 9) {
 			next.health = Math.min(current.health + interval * this.regen, 9);
 		}
 		// if shooting is still cooling down
@@ -217,15 +230,8 @@ export class Player {
 			const duration = new Date().getTime() - this.previous.primary;
 			if (duration > 250) {
 				// extend the reel
-				this.scope.reel.extend(current);
-				// arrest movement
-				next.direction = current.direction;
-				next.x = current.x;
-				next.y = current.y;
-				next.col = current.col;
-				next.row = current.row;
-				next.horizontal = 0;
-				next.vertical = 0;
+				arrested = this.scope.reel.extend(current);
+				next.reeling = arrested.extension;
 			}
 		} 
 		// or if the secondary button is used
@@ -240,7 +246,8 @@ export class Player {
 		// or if the primary button is tapped
 		else if (this.previous.primary && !current.primary) {
 			// retract the reel
-			this.scope.reel.retract(current);
+			arrested = this.scope.reel.retract(current);
+			next.reeling = 0;
 			// if the button press was short enough (but only is the secondary button is not used)
 			const duration = new Date().getTime() - this.previous.primary;
 			if (current.shooting < 1 && duration < 250 && !this.hassecondary) {
@@ -249,6 +256,18 @@ export class Player {
 				// launch a projectile
 				this.scope.projectiles.add(this);
 			}
+		}
+		// arrest movement if needed
+		if (arrested) {
+			// arrest movement
+			console.log("arrested");
+			next.heading = arrested.direction;
+			next.x = arrested.x;
+			next.y = arrested.y;
+			next.col = arrested.col;
+			next.row = arrested.row;
+			next.horizontal = 0;
+			next.vertical = 0;
 		}
 	}
 
@@ -322,10 +341,10 @@ export class Player {
 	scan = function (interval) {
 		// highlight ahead
 		var addcol = 0, addrow = 0;
-		if (/N/.test(this.direction)) { addrow = -1; 	}
-		else if (/S/.test(this.direction)) { addrow = 1 }
-		if (/W/.test(this.direction)) { addcol = -1; }
-		else if (/E/.test(this.direction)) { addcol = 1; }
+		if (/N/.test(this.heading)) { addrow = -1; 	}
+		else if (/S/.test(this.heading)) { addrow = 1 }
+		if (/W/.test(this.heading)) { addcol = -1; }
+		else if (/E/.test(this.heading)) { addcol = 1; }
 		// stairstep the light levels across the cols and rows
 		for (let a = 0, b = this.range; a < b; a += 1) {
 			let col = this.col + a * addcol;

@@ -52,7 +52,7 @@ export class Controls {
 				} else if (this.vectors.west) {
 					directions.push("W")
 				}
-				this.scope.player.direction = directions.join("");
+				this.scope.player.bearing = directions.join("");
 				this.scope.player.acceleration = this.acceleration;
 			} else {
 				// or halt the motion

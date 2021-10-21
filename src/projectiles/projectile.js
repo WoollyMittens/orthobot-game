@@ -14,7 +14,7 @@ export class Projectile {
 		this.x = origin.x;
 		this.y = origin.y;
 		this.offset = origin.radius;
-		this.direction = origin.direction;
+		this.direction = origin.direction || origin.heading;
 		this.elemental = origin.elemental;
 		this.weapon = origin.weapon;
 		this.lifespan = 0;

@@ -14,7 +14,7 @@
 
 /* status effects */
 
-.ob-player[data-direction="S"] {}
+.ob-player[data-heading="S"] {}
 
 .ob-player[data-acceleration^="0"] {}
 

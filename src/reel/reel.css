@@ -1,1 +1,10 @@
-.ob-reel {}
+.ob-reel {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  z-index: 3;
+  margin: -16px 0 0 -16px;
+  visibility: hidden;
+}
+
+.ob-tether {}

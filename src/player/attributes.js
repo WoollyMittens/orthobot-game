@@ -1,7 +1,8 @@
 export const attributes = {
 	"common": {
 		"variant": "",
-		"direction": "S",
+		"heading": "S",
+		"bearing": "S",
 		"acceleration": 0,
 		"primary": 0,
 		"secondary": 0,
