@@ -259,8 +259,6 @@ export class Player {
 		}
 		// arrest movement if needed
 		if (arrested) {
-			// arrest movement
-			console.log("arrested");
 			next.heading = arrested.direction;
 			next.x = arrested.x;
 			next.y = arrested.y;
@@ -268,6 +266,10 @@ export class Player {
 			next.row = arrested.row;
 			next.horizontal = 0;
 			next.vertical = 0;
+		}
+		// or make the bearing the heading
+		else {
+			next.heading = next.bearing;
 		}
 	}
 

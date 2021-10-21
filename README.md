@@ -70,6 +70,10 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
 MagicaVoxel
 https://ephtracy.github.io/
 
+## Pathfinding
+
+http://gregtrowbridge.com/a-basic-pathfinding-algorithm/
+
 ## License
 
 [The MIT License](LICENSE)

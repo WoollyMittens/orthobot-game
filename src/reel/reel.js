@@ -7,6 +7,7 @@ export class Reel {
 		this.element.className = "ob-reel";
 		this.tether = document.createElement("div");
 		this.tether.className = "ob-tether";
+		this.extending = 0;
 		this.extension = 0;
 		this.hooked = 0
 		this.direction = "N";
@@ -88,7 +89,6 @@ export class Reel {
 			this.y = coordinates.y;
 			this.col = coordinates.col;
 			this.row = coordinates.row;
-			// mark the reel as extending
 		} 
 		// or the reel is extended
 		else {
@@ -111,8 +111,7 @@ export class Reel {
 		// reset the origin
 		this.extension = 0;
 		this.hooked = 0;
-		// mark the reel as retracting
-		// TODO: do not release moment until full retracted
+		// TODO: do not release movement until full retracted
 		// release moment
 		return null;
 	}
