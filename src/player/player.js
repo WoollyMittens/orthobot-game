@@ -214,7 +214,7 @@ export class Player {
 	}
 
 	animate = function (current, next, interval) {
-		var arrested = false;
+		// check if reeling
 		// apply the health regen
 		if (current.health > 0 && current.health < 9) {
 			next.health = Math.min(current.health + interval * this.regen, 9);
@@ -230,8 +230,7 @@ export class Player {
 			const duration = new Date().getTime() - this.previous.primary;
 			if (duration > 250) {
 				// extend the reel
-				arrested = this.scope.reel.extend(current);
-				next.reeling = arrested.extension;
+				this.scope.reel.extend(current);
 			}
 		} 
 		// or if the secondary button is used
@@ -246,8 +245,7 @@ export class Player {
 		// or if the primary button is tapped
 		else if (this.previous.primary && !current.primary) {
 			// retract the reel
-			arrested = this.scope.reel.retract(current);
-			next.reeling = 0;
+			this.scope.reel.retract();
 			// if the button press was short enough (but only is the secondary button is not used)
 			const duration = new Date().getTime() - this.previous.primary;
 			if (current.shooting < 1 && duration < 250 && !this.hassecondary) {
@@ -258,12 +256,13 @@ export class Player {
 			}
 		}
 		// arrest movement if needed
-		if (arrested) {
-			next.heading = arrested.direction;
-			next.x = arrested.x;
-			next.y = arrested.y;
-			next.col = arrested.col;
-			next.row = arrested.row;
+		next.reeling = this.scope.reel.status();
+		if (next.reeling !== 0) {
+			next.heading = current.direction;
+			next.x = current.x;
+			next.y = current.y;
+			next.col = current.col;
+			next.row = current.row;
 			next.horizontal = 0;
 			next.vertical = 0;
 		}

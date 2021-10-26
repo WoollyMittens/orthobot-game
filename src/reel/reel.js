@@ -2,14 +2,15 @@ export class Reel {
 	constructor(scope) {
 		// expose the scope
 		this.scope = scope;
+		this.model = scope.model;
 		// construct reel entity
 		this.element = document.createElement("div");
 		this.element.className = "ob-reel";
 		this.tether = document.createElement("div");
 		this.tether.className = "ob-tether";
 		this.extending = 0;
-		this.extension = 0;
-		this.hooked = 0
+		this.distance = 0;
+		this.hooked = 0;
 		this.direction = "N";
 		this.x = 0;
 		this.y = 0;
@@ -20,12 +21,20 @@ export class Reel {
 		scope.background.add(this.tether);
 	}
 
-	get extension() {
-		return +this.element.getAttribute("data-extension");
+	get extending() {
+		return +this.element.getAttribute("data-extending");
 	}
 
-	set extension(value) {
-		this.element.setAttribute("data-extension", value);
+	set extending(value) {
+		this.element.setAttribute("data-extending", value);
+	}
+
+	get distance() {
+		return +this.element.getAttribute("data-distance");
+	}
+
+	set distance(value) {
+		this.element.setAttribute("data-distance", value);
 	}
 
 	get hooked() {
@@ -47,7 +56,8 @@ export class Reel {
 	get position() {
 		// return all positional data as one object
 		return {
-			"extension": this.extension,
+			"extending": this.extending,
+			"distance": this.distance,
 			"hooked": this.hooked,
 			"direction": this.direction,
 			"col": this.col,
@@ -58,7 +68,8 @@ export class Reel {
 	}
 
 	set position(data) {
-		this.extension = data.extension;
+		this.extending = data.extending;
+		this.distance = data.distance;
 		this.hooked = data.hooked;
 		this.direction = data.direction;
 		this.col = data.col;
@@ -77,12 +88,18 @@ export class Reel {
 		});
 	}
 
+	status = function (coordinates) {
+		this.scope.interface.log = "reel status " + this.distance.toFixed(3);
+		// return the reeling status
+		return this.extending;
+	}
+
 	extend = function (coordinates) {
-		this.scope.interface.log = "extend reel";
 		// if the reel is retracted
-		if (this.extension <= 0) {
+		if (this.extending <= 0 && this.hooked <= 0) {
 			// establish the origin
-			this.extension = 1;
+			this.extending = 1;
+			this.distance = 0;
 			this.hooked = 0;
 			this.direction = coordinates.heading;
 			this.x = coordinates.x;
@@ -90,45 +107,43 @@ export class Reel {
 			this.col = coordinates.col;
 			this.row = coordinates.row;
 		} 
-		// or the reel is extended
-		else {
-			// increase the extension
-		}
-		// arrest movement
-		return {
-			"extension": this.extension,
-			"hooked": this.hooked,
-			"direction": this.direction,
-			"x": this.x,
-			"y": this.y,
-			"col": this.col,
-			"row": this.row
-		};
 	}
 
 	retract = function () {
-		this.scope.interface.log = "retract reel";
-		// reset the origin
-		this.extension = 0;
-		this.hooked = 0;
-		// TODO: do not release movement until full retracted
-		// release moment
-		return null;
+		// retract the reel
+		this.extending = -1;
 	}
 
 	update = function (interval) {
-		// TODO: extend or retract the reel
-		// if the reel is marked as extending
-			// increase the reel length
-		// or 
+		// capture
+		if (this.hooked > 0) {
 			// decrease the reel length
-		// if the hook collides with a bot
+			this.distance = Math.max(this.distance - interval * this.model.actuation, 0);
+			// TODO: adjust the position of the bot along with the the reel
+		}
+		// extend
+		else if (this.extending > 0) {
+			// increase the reel length
+			this.distance = Math.min(this.distance + interval * this.model.actuation, 9);
+		}
+		// retract
+		else if (this.extending <= 0 && this.hooked <= 0 && this.distance > 0) {
+			// decrease the reel length
+			this.distance = Math.max(this.distance - interval * this.model.actuation, 0);
+		}
+		// release
+		if (this.distance <= 0) {
+			// stop extending or retracting
+			this.extending = 0;
+		}
+
+		// TODO: if the hook collides with a bot
 			// arrest the bot
-			// adjust the position of the bot to the reel length
 		// if a hooked bot is on the same tile
 			// upgrade the player
 			// place wreckage of current player's variant
 			// remove the bot
+			
 		// render the reel
 		this.render();
 	}
