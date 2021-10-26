@@ -214,7 +214,6 @@ export class Player {
 	}
 
 	animate = function (current, next, interval) {
-		// check if reeling
 		// apply the health regen
 		if (current.health > 0 && current.health < 9) {
 			next.health = Math.min(current.health + interval * this.regen, 9);
@@ -255,10 +254,10 @@ export class Player {
 				this.scope.projectiles.add(this);
 			}
 		}
-		// arrest movement if needed
+		// arrest movement if reeling
 		next.reeling = this.scope.reel.status();
 		if (next.reeling !== 0) {
-			next.heading = current.direction;
+			next.heading = current.heading;
 			next.x = current.x;
 			next.y = current.y;
 			next.col = current.col;
@@ -341,7 +340,6 @@ export class Player {
 
 	scan = function (interval) {
 		// highlight ahead
-// TODO: scanning should not stop working when motion arrested
 		var addcol = 0, addrow = 0;
 		if (/N/.test(this.heading)) { addrow = -1; 	}
 		else if (/S/.test(this.heading)) { addrow = 1 }
