@@ -341,6 +341,7 @@ export class Player {
 
 	scan = function (interval) {
 		// highlight ahead
+// TODO: scanning should not stop working when motion arrested
 		var addcol = 0, addrow = 0;
 		if (/N/.test(this.heading)) { addrow = -1; 	}
 		else if (/S/.test(this.heading)) { addrow = 1 }
