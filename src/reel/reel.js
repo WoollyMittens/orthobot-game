@@ -12,6 +12,7 @@ export class Reel {
 		this.distance = 0;
 		this.hooked = 0;
 		this.direction = "N";
+		this.limit = 2;
 		this.x = 0;
 		this.y = 0;
 		this.col = 0;
@@ -79,12 +80,27 @@ export class Reel {
 	}
 
 	render = function () {
+		// position the reel at the origin point
+		var x = this.x;
+		var y = this.y;
+		var z = this.z;
+		// add the distance to the reel
+		switch(this.direction) {
+			case "N": y -= this.distance * this.model.gridsize; break;
+			case "NE": break;
+			case "E": x += this.distance * this.model.gridsize; break;
+			case "SE": break;
+			case "S": y += this.distance * this.model.gridsize; break;
+			case "SW": break;
+			case "W": x -= this.distance * this.model.gridsize; break;
+			case "NW": break;
+		}
 		// translate the reel's attributes into styles
 		Object.assign(this.element.style, {
 			transform: `translate3d(
-				${this.x}px, 
-				${this.y}px, 
-				${this.y}px)`
+				${x}px, 
+				${y}px, 
+				${y}px)`
 		});
 	}
 
@@ -124,7 +140,7 @@ export class Reel {
 		// extend
 		else if (this.extending > 0) {
 			// increase the reel length
-			this.distance = Math.min(this.distance + interval * this.model.actuation, 9);
+			this.distance = Math.min(this.distance + interval * this.model.actuation, this.limit);
 		}
 		// retract
 		else if (this.extending <= 0 && this.hooked <= 0 && this.distance > 0) {
