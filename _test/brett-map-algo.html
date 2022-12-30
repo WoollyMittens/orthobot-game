@@ -1,0 +1,258 @@
+<pre id="map" style="font-family: monospace; display: inline-block; padding: 0 50px"></pre>
+​
+<script>
+	let x = 80; //Map width
+	let y = 35;	//Map height
+	let tiles = {nullTile: '*', wallTile: '#', floorTile: '.', doorTile: '+', roomTile: ' '}; 	
+	let rooms = 4;
+	let map = initialiseMap(x, y, rooms, tiles);
+​
+	document.getElementById('map').innerHTML = renderMap(map);
+​
+console.log(map);
+​
+	function initialiseMap(x, y, roomCount, tiles) {
+		var map = [];
+​
+		//Build out the map with all null tiles to start with
+		for (var currentY = 0; currentY < y; currentY++) {
+			var mapY = [];
+			for (var currentX = 0; currentX < x; currentX++) {
+				mapY[currentX] = tiles.nullTile;
+			}
+			map[currentY] = mapY;
+		}
+​
+		var rooms = [];
+​
+		//Generate as many rooms as we were asked to build (be careful with the quantity and sizes as it will keep trying to randomly place these till it matches your stats - ie maybe put a limit on this)
+		while (rooms.length < roomCount) {
+			//A successful room creation will return the coordinates of its door so we can build out paths next
+			var doorCoords = placeRoom(map, tiles);
+​
+			if (doorCoords != undefined) {
+				rooms.push(doorCoords);
+			}
+		}
+​
+​
+		//Tidy up the doors - if you dont want to have doors then clean em out
+		for (var i = 0; i < rooms.length; i++) {
+			map[rooms[i].y][rooms[i].x] = tiles.floorTile;
+		}
+​
+		//Now add the paths
+		while (rooms.length > 1) {
+			let from = rooms[0];
+			let to = rooms[1];
+​
+			var path = getPath(from, to, buildTraversalMap(map), tiles);
+​
+			if (path.length) {
+				// console.log('found path', from, to, path);
+				//add the path to the map
+				for (var i = 0; i < path.length; i++) {
+					let tile = path[i];
+					map[tile.y][tile.x] = tiles.floorTile;
+				}
+​
+			} else {
+				console.log('no found path', from, to, path);							
+			}
+​
+			rooms.shift();
+		}
+​
+		return map;
+	}
+​
+​
+	// I come up with a random location and orientation for a room and if my chosen spot fits i return the door coords of the room
+	function placeRoom(map, tiles, width = randRange(7,12), height = randRange(7,12)) {
+		let mapWidth = map[0].length;
+		let mapHeight = map.length;
+​
+		let x = randRange(1, mapWidth - width - 1); 	//Dont allow placement on edges to keep it safe for traversal
+		let y = randRange(1, mapHeight - height - 2);	//Dont allow placement on edges to keep it safe for traversal
+​
+		//Heads or tails if the door will be on top/bottom or sides
+		if (randRange(0,1)) { //top / bottom
+			var doorX = randRange(x + 1, x + width - 1); //Door cant be on the corner of the room 
+			var doorY = y + randRange(0,1) * height;
+		} else { //sides
+			var doorX = x + randRange(0,1) * width;
+			var doorY = randRange(y + 1, y + height - 1); //Door cant be on the corner of the room 
+		}
+​
+		//Check that room is not overlapping with any other
+		if (!roomFits(map, x, y, width, height, tiles)) return undefined;
+​
+		//Safety check doors arent on the edge of the map
+		if (doorX == 0 || doorX == mapWidth - 1) return undefined;
+		if (doorY == 0 || doorY == mapHeight - 1) return undefined;
+​
+		addRoom(map, x, y, width, height, doorX, doorY, tiles);
+​
+		return {x: doorX, y: doorY}
+	}
+​
+​
+	function addRoom(map, x, y, width, height, doorX, doorY, tiles) {
+		let minX = x;
+		let minY = y;
+		let maxX = x + width;
+		let maxY = y + height;
+​
+		for (var py = y; py <= maxY; py++) {
+			for (var px = x; px <= maxX; px++) {
+				var tile = tiles.nullTile;
+				if (px == doorX && py == doorY) {
+					tile = tiles.doorTile;
+				} else if (px == x || px == maxX || py == y || py == maxY) {
+					tile = tiles.wallTile;
+				} else {
+					tile = tiles.roomTile;
+				}
+​
+				map[py][px] = tile;
+			}
+		}
+	}
+​
+​
+	//I check if a room will fit in its currently requested random location and dimensions. Rooms are given 1 extra tile of breathing space to allow for traversal given random door locations
+	function roomFits(map, x, y, width, height, tiles) {
+		//For simplicity forcing rooms to have at least 1 square of space between them to allow for roads given random location of doors so adding a buffer
+		for (var yy = y - 1; yy <= y + height + 1; yy++) {
+			for (var xx = x - 1; xx <= x + width + 1; xx++) {
+				if (yy < 0) return false
+				if (yy > map.length -1) return false
+				if (xx < 0) return false;
+				if (xx > map[y].length - 1) return false;
+​
+				if (map[yy][xx] != tiles.nullTile) return false
+			}
+		}
+​
+		return true
+	}
+​
+​
+	function getPath(from, to, traversalMap, tiles) {
+		//Load the starting point into the queue
+		var queue = [traversalMap[from.y][from.x]];
+		var iterations = 0
+​
+		while (queue.length > 0 && iterations++ < (traversalMap.length * traversalMap[0].length)) {
+			//Take the top entry off the queue
+			var currentLocation = queue.shift();
+​
+			if (currentLocation.x == to.x && currentLocation.y == to.y) return currentLocation.path;
+​
+			//add the best accessible locations from this point based on proximity to end point to the start of teh queu so we are processing the closest entries 1st
+			queue = getPathOptions(traversalMap, currentLocation, to, tiles).concat(queue);
+​
+		}
+​
+		//There was no solution so return empty
+		return [];
+	}
+​
+​
+	function getPathOptions(traversalMap, location, to, tiles) {
+​
+		location.visited = true;
+​
+		var candidates = [];
+​
+		var target = {		
+			"top" : location.y - 1 >= 0 ? {y: location.y - 1, x: location.x} : undefined,
+			"bottom" : location.y + 1 < traversalMap.length ? {y: location.y + 1, x: location.x} : undefined,
+			"left" : location.x - 1 >= 0 ? {y: location.y, x: location.x - 1} : undefined,
+			"right" : location.x + 1 < traversalMap[0].length ? {y: location.y, x: location.x + 1} : undefined,
+		};
+		for (var key in target) {
+			var targetSquare = target[key];
+​
+			if (targetSquare != undefined) {
+				var traversalMapSquare = traversalMap[targetSquare.y][targetSquare.x];
+​
+				if (!traversalMapSquare.visited && validPathSquare(traversalMapSquare, tiles)) {
+					traversalMapSquare.dtt = (targetSquare.x - to.x) ** 2 + (targetSquare.y - to.y) ** 2;
+					traversalMapSquare.path = location.path.slice();	
+					traversalMapSquare.path.push(traversalMapSquare);
+					candidates.push(traversalMapSquare);
+				}
+			}
+		}
+​
+		//Sort the candidates based on which one gets us linearly cloaser to our destination
+		candidates.sort((a,b) => (a.dtt > b.dtt) ? 1 : ((b.dtt > a.dtt) ? -1 : 0));
+// console.log('candidates', candidates);		
+​
+		return candidates;
+	}
+​
+​
+	//For now you can only tunnel through empty tiles or door tiles to get places
+	function validPathSquare(square, tiles) {
+		return square.tile == tiles.nullTile || square.tile == tiles.doorTile || square.tile == tiles.floorTile;
+	}
+​
+​
+	function buildTraversalMap(map) {
+		let tm = [];
+​
+		for (var y = 0; y < map.length; y++) {
+			var tmY = [];
+			for (var x = 0; x < map[y].length; x++) {
+				let data = {x: x, y: y, tile: map[y][x], path: [], dtt: 0, visited: false}
+				tmY[x] = data;
+			}
+			tm[y] = tmY;
+		}
+​
+		return tm;
+	}
+​
+​
+	//I return an int between min and max inclusive
+	function randRange(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min)
+	}
+​
+​
+	function renderMap(map) {
+		var content = '';
+​
+		var decCount = 0;
+		content += '   ';
+		for (var a = 0; a < map[0].length; a++) {
+			if (a % 10 == 0 && a > 0) {
+				decCount++;
+				content += decCount.toString();
+			} else {
+				content += '&nbsp;';
+			}
+		}
+		content += '   <br>';
+		content += '   ';
+		for (var a = 0; a < map[0].length; a++) {
+			if (a % 5 == 0) {
+				content += a % 10;
+			} else {
+				content += ' ';
+			}
+		}
+		content += '   <br><br>';
+​
+		for (let y = 0; y < map.length; y++) {
+			for (let x = 0 ; x < map[y].length; x++) {
+				content += map[y][x] != '.' ? map[y][x] : ' ';
+			}
+			content += ' ' + y.toString().padStart('0', 2) + '<br>';
+		}
+​
+		return content;
+	}	
+</script>

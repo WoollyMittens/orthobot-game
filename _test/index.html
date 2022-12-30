@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ranked Keyboard Collection</title>
+	<meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, width=device-width"/>\
+</head>
+
+<body>
+
+
+
+<div id="map" style="font-family: monospace; display: inline-block; padding: 0 50px"></div>
+<script>
+	let mapWidth = 30;
+	let mapHeight = 20;
+	let maxTiles = mapWidth * mapHeight;
+	let maxOpen = Math.round(maxTiles * 0.3); //The maximum number of tiles you want dug up on the map
+
+	var map = generate(mapWidth, mapHeight, maxOpen);
+
+	document.getElementById('map').innerHTML = renderMap(map);
+
+	function generate(mapWidth, mapHeight, maxOpen) {
+		let map = initialiseMap(mapWidth, mapHeight);
+		var openCount = 0;	//Number of open tiles created
+		var iterations = 0; //Safety switch to limit time spent generating map
+
+		//Get a starting spot for the 1st open space
+		var posX = randRange(0, mapWidth - 1);
+		var posy = randRange(0, mapHeight - 1);
+
+		var curPos = undefined; //Place holder for tracking where the digging is currently up to
+		while (openCount < maxOpen && iterations < 1000) {
+			iterations++;
+			curPos = selectTile(map, curPos);
+			if (map[curPos.y][curPos.x].traversed == false) {
+// console.log('Selected new dig', curPos.x, curPos.y);
+				map[curPos.y][curPos.x].tile = '.';
+				map[curPos.y][curPos.x].traversed = true;
+				openCount++;
+			} else {
+// console.log('Selected traversed', curPos.x, curPos.y);​
+			}
+		}
+		return map;
+	}
+
+	//I just sety up the map as all undig tiles and set the tracking values for later use
+	function initialiseMap(width, height) {
+		var map = new Array(height);
+
+		for (let y = 0; y < height; y++) {
+			map[y] = [];
+			for (var x = 0; x < width; x++) {
+				map[y][x] = {tile: '#', traversed: false};
+			}
+		}
+
+		return map
+	}
+
+
+	//I work out the set of options for candidate tiles preferencing untraversed tiles over others basewd on where the current traversal of tiles has left us. I pick a random starting tile on first pass 
+	function selectTile(map, curPos) {
+		let width = map[0].length;
+		let height = map.length;
+
+		if (curPos == undefined) {
+			return {x: randRange(0, width - 1), y: randRange(0, height - 1)};
+		}
+
+		let priority = []; //I store the high value candidates for random selection
+		let alternate = []; //I store the low value candidates (already traversed) for random selection
+
+		//Queue up the options North, south, east, west - we will check for valid positions in the loop for brevity of checks
+		let options = [{x: curPos.x, y: curPos.y - 1},{x: curPos.x, y: curPos.y + 1},{x: curPos.x - 1, y: curPos.y},{x: curPos.x + 1, y: curPos.y}]
+
+		for (var i = 0; i < options.length; i++) {
+			let option = options[i];
+			if (option.x >= 0  && option.x < width && option.y >= 0 && option.y < height) {
+				if(map[option.y][option.x].traversed == false) {
+					priority.push(option);
+				} else {
+					alternate.push(option);
+				}
+			}
+		}
+		// console.log(priority, alternate);
+
+		if (priority.length) return priority[randRange(0, priority.length - 1)];
+		if (alternate.length) return alternate[randRange(0, alternate.length - 1)];
+		return curPos; //Shouldnt be a case where there is no square chosen but if there is just return the one we came from
+	}
+
+
+	function randRange(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min)
+	}
+
+
+	function renderMap(map) {
+		var content = '';
+		for (let x = 0; x < map.length; x++) {
+			for (let y = 0 ; y < map[x].length; y++) {
+				content += map[x][y].tile;
+			}
+			content += '<br>';
+		}
+		return content;
+	}
+</script>
+
+</body>
+
+</html>
